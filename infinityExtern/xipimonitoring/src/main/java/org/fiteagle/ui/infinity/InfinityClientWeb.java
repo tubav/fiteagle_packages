@@ -16,6 +16,7 @@ import org.fiteagle.ui.infinity.model.InfinityValueID;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -102,11 +103,51 @@ public class InfinityClientWeb extends InfinityClient {
 	
 	
 	private String getJsonString(MultivaluedMapImpl queryParams) {
+//		WebResource resource = path.queryParams(queryParams);
+//		Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+//		String jsonString = builder.get(String.class);
+		
+		//TEST
+		
 		WebResource resource = path.queryParams(queryParams);
-		Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
-		String jsonString = builder.get(String.class);
+		ClientResponse clientResponse = resource.accept(MediaType.APPLICATION_JSON_TYPE).get(ClientResponse.class);
+		
+		InputStream entityInputStream = clientResponse.getEntityInputStream();
+		
+//		String jsonString = builder.get(String.class);
+		
+		//TEST
+		
+		
+		
+		
+		
+//		InputStream jsonString = builder.get(InputStream.class);
+		
+//		//TODO: To test only
+//		String encoding = "";
+//		try {
+//			encoding = GetCharset.guessEncoding(GetCharset.getBytesOfInputStream(jsonString));
+//		} catch (UnsupportedEncodingException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		
+//		String str=null;
+//		try {
+//			str = new String(jsonString.getBytes("cp1252"), "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return str;
 
-		InputStream fixedInputStream;
+		InputStream fixedInputStream = null;
 		
 		
 		
@@ -115,22 +156,77 @@ public class InfinityClientWeb extends InfinityClient {
 		// ByteArrayInputStream(jsonString.getBytes("ISO-8859-1")));
 		
 		
-		fixedInputStream = fixXIPIEncoding(new ByteArrayInputStream(
-				jsonString.getBytes()));
+		InputStream inputStream=null;
+		
+		
+//		try {
+////			inputStream = new ByteArrayInputStream(jsonString.getBytes("ISO-8859-1"));
+//			inputStream = new ByteArrayInputStream(jsonString.getBytes("WINDOWS-1252"));
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		//TO test
+//		try {
+//			inputStream = new ByteArrayInputStream(jsonString.getBytes("cp1252"));
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		String respo = fixXIPIEncodingStr(inputStream);
+//		return respo;
+		
+		
+//		String respo = fixXIPIEncodingStr(entityInputStream);
+		InputStream inpuster = fixXIPIEncoding(entityInputStream);
+		String respo = convertStreamToString(inpuster);
+		return respo;
+		
+		//7totest
+		
+		
+//		fixedInputStream = fixXIPIEncoding(inputStream);
+////		fixedInputStream = fixXIPIEncoding(jsonString);
+//		
+//		
+//		//--TESTING
+////		fixedInputStream = new String(jsonString.getBytes(), "ISO-8859-1").getBytes("UTF-8");
+//		
+//		
+////		try {
+//////			fixedInputStream = new String(jsonString.getBytes(), "ISO-8859-1").getBytes("UTF-8");
+//////			fixedInputStream = new String(GetCharset.getBytesOfInputStream(jsonString) ,"ISO-8859-1").getBytes("UTF-8");
+////		} catch (UnsupportedEncodingException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		} catch (IOException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		return fixXIPIEncodingStr(jsonString);
+//		return convertStreamToString(fixedInputStream);
 		
 		
 		
-		// fixedInputStream = fixXIPIEncodingTest(new
-		// ByteArrayInputStream(jsonString.getBytes()));
-		// } catch (UnsupportedEncodingException e) {
-		// throw new RuntimeException(e.getMessage());
-		// }
+		//--/TESTING
+		
+		
+		
+//		 fixedInputStream = fixXIPIEncodingTest(new
+//		 ByteArrayInputStream(jsonString.getBytes()));
+//		 } catch (UnsupportedEncodingException e) {
+//		 throw new RuntimeException(e.getMessage());
+//		 }
 
 		// String result = fixXIPIEncodingTest(new
 		// ByteArrayInputStream(jsonString.getBytes()));
 		
-		
-		return convertStreamToString(fixedInputStream);
+//		return convertStreamToString(new ByteArrayInputStream(
+//				jsonString.getBytes()));
+//		return convertStreamToString(fixedInputStream);
+//		return "something";
 		
 		
 		// return result;

@@ -1,8 +1,8 @@
 //$(document).ready(function() {
-//	alert("Welcome " + ", on document load works! ");
+//	console.log("Welcome " + ", on document load works! ");
 //});
 
-function myFunction(statusString) {
+function getStatus(statusString) {
 //	$('#statusTable > tbody')
 //			.append(
 //					'<tr><td>somethingSomething</td><td>testbedStatusId</td><td>testbedstatusdate</td><td class="statusRow" '
@@ -10,25 +10,17 @@ function myFunction(statusString) {
 
 //	showStatus(statusString);
 //	$.get("https://localhost:8443/api/v1/status", function(data) {
-	$.get("http://localhost:8080/xipimonitoring/rest/v1/status", function(data) {
-		alert("showStatus is called oki!");
+	$.get("/xipimonitoring/rest/v1/status", function(data) {
+		console.log("showStatus is called ok!");
 		showStatus(data);
 	});
-	$(document).on("click", ".statusRow", function() {
-		alert(".statusRow on click is called!");
+	$(document).on("click", ".detailsButton", function() {
+		console.log(".statusRow on click is called!");
 		rowId = this.id;
-		$("#popup").modal("show");
-	});
-	$("#popup").on("show", function() {
-		alert("on show #popup is called!");
-//		$.get("https://localhost:8443/api/v1/status/" + rowId, function(data) {
-		$.get("http://localhost:8080/xipimonitoring/rest/v1/status/" + rowId, function(data) {
-			$(".modal-body").html(showDetailedStatus(data));
-
+		$.get("/xipimonitoring/rest/v1/status/" + rowId, function(data) {
+			showDetailedStatus(data);
 		});
-
 	});
-
 }
 
 showStatus = function(data){
@@ -40,22 +32,28 @@ showStatus = function(data){
 	}
 }
 
-showDetailedStatus = function(data) {
+function showDetailedStatus (data) {
 	//sort the data list
-	alert("showDetailedStatus is called!");
-	sortStatusLines(data.components);
-	var table =  "<table><caption><h3>"+data.id+"</h3></caption><thead><tr><th>Monitoring Status</th><th>Component Name</th><th>Last checked</th></tr></thead><tbody>";
-	var tableBody = "";
-	for(var k in data.components){
-		tableBody = tableBody + buildDetailRow(data.components[k]);
-	}
-	 
-	 table = table + tableBody + "</tbody></table>";
-	 
-	 return table;
-	 
-		
+	console.log("showDetailedStatus is called!");
 	
+	$("#tbName").html(data.id);
+	time = new Date(data.lastCheck).toString();
+	if(data.lastCheck){
+		$("#tbUpdate").html(time);
+	}else {
+		$("#tbUpdate").html("");
+	}
+	$("#tbStatusImage").html(getStatusIcon(data.status));
+	componentStatus = "";
+	if (data.components) {
+		sortStatusLines(data.components);
+		for(var k in data.components){
+			componentStatus += buildDetailRow(data.components[k]);
+		}
+		$("#tbComponentStatus").html(componentStatus);
+	}else{
+		$("#tbComponentStatus").html("");
+	}
 }
 
 sortStatusLines = function(data){
@@ -88,7 +86,9 @@ buildRow = function(testbedstatus){
 	var lastCheckStr = 'unknown'; 
 	if(testbedstatus.lastCheck!=null)
 		lastCheckStr = new Date(testbedstatus.lastCheck).toString();
-	var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td class="statusRow" '+'id="'+testbedstatus.id+'">Details</td></tr>';
+//	var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td class="detailsButton" '+'id="'+testbedstatus.id+'"><a href="/infrastructure/-/infrastructure/view/"'+theID+'"#tab-status">Details</a></td></tr>';
+//	var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td class="detailsButton" '+'id="'+testbedstatus.id+'"><a href="/path/to/your/stuff/?id='+theID+'">Details</a></td></tr>';
+	var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td class="detailsButton" '+'id="'+testbedstatus.id+'">Details</td></tr>';
 	return row;
 }	
 
@@ -100,19 +100,24 @@ buildDetailRow = function(testbedstatus) {
 	var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td></tr>';
 	return row;
 }
+
+
 // TODO don't rely on img names and path
 getStatusIcon = function(status) {
 	if(status === 'up'){
-		return '<img src="images/green.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/green.png" class="status">';
 	}else if (status === 'down') {
-		return '<img src="images/red.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/red.png" class="status">';
 	}else if (status === 'partially') {
-		return '<img src="images/yellow.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/yellow.png" class="status">';
 	}else if (status === 'upAndLastCheckedOld') {
-		return '<img src="images/gray.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/gray.png" class="status">';
 	}else if (status === 'undefined') {
-		return '<img src="images/unknown.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/unknown.png" class="status">';
 	}else if (status === null) {
-		return '<img src="images/unknown.png" class="status"></img>';
+		return '<img src="/monitoringPortlet-portlet/images/unknown.png" class="status">';
 	}
+	
 }
+
+getStatus();

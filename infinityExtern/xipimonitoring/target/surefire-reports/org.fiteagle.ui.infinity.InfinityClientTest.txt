@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.fiteagle.ui.infinity.InfinityClientTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.502 sec
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.99 sec

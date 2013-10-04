@@ -7,9 +7,9 @@
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/bootstrap.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>monitoringPortlet-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
