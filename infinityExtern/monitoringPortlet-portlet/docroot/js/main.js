@@ -10,16 +10,26 @@ function getStatus(statusString) {
 
 //	showStatus(statusString);
 //	$.get("https://localhost:8443/api/v1/status", function(data) {
-	$.get("/xipimonitoring/rest/v1/status", function(data) {
+	$.get("/xipimonitoring/rest/v1/status", function(data) {	
 		console.log("showStatus is called ok!");
 		showStatus(data);
 	});
 	$(document).on("click", ".detailsButton", function() {
 		console.log(".statusRow on click is called!");
 		rowId = this.id;
-		$.get("/xipimonitoring/rest/v1/status/" + rowId, function(data) {
+		//TODO: get the ids url encoded???
+//		encodedId = $.URLEncode(this.id);
+		encodedId = encodeURIComponent(this.id);
+//		$.get("/xipimonitoring/rest/v1/status/" + rowId, function(data) {
+//			showDetailedStatus(data);
+//		});
+		alert("on click is active with encoded id: "+encodedId);
+//		$.get("/xipimonitoring/rest/v1/status/" + encodedId, function(data) {
+		$.get("/xipimonitoring/rest/v1/status/getById?id=" + rowId, function(data) {
+			alert("id in response : "+data.id);
 			showDetailedStatus(data);
 		});
+		
 	});
 }
 

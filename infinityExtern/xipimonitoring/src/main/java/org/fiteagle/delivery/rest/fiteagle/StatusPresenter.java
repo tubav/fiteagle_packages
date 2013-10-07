@@ -1,6 +1,7 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
 import org.fiteagle.interactors.monitoring.MonitoringManager;
@@ -48,10 +50,20 @@ public class StatusPresenter {
 	}
 
 	@GET
-	@Path("{id}")
+	@Path("getById")
+//	@Path("{id}")
 	@Produces("application/json")
-	public TestbedStatus getTestBedStatusById(@PathParam("id") String id) {
+//	public TestbedStatus getTestBedStatusById(@PathParam("id") String id) {
+	public TestbedStatus getTestBedStatusById(@QueryParam("id") String id) {
+//		String decodedId=null;
+//		try {
+//			decodedId = URLDecoder.decode(id, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return statusTable2Testbedstatus(monitor.getMonitoringDataById(id));
+//		return statusTable2Testbedstatus(monitor.getMonitoringDataById(decodedId));
 	}
 	
 	private TestbedStatus statusTable2Testbedstatus(StatusTable statusTable){
