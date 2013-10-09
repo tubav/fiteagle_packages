@@ -18,13 +18,13 @@ public class OMLServerTest {
 	@Before
 	public void setup() {
 //		omlServer = new OMLServer();
-		client = new OMLClientMock();
+//		client = new OMLClientMock();
 //		omlServer.run();
 	}
 
 	@Test
 	public void testPushMonitoringData() {
-		client.run();
+//		client.run();
 	}
 	
 	@Test
