@@ -25,7 +25,7 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	
 	private static boolean serverStarted = false;
 	private static OMLServer omlServer = new OMLServer();
-	private String xipiUriString="http://www.xipi.eu";
+	
 //	InfinityClientMock client = new InfinityClientMock();
 	InfinityClient client;
 	
@@ -40,7 +40,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 		omlServer.terminate();
 	}
 	
-//	@Override
 	public Collection<StatusTable> getMonitoringData() {
 		if(monitoringData.isEmpty()){
 			List<StatusTable> data;
@@ -63,7 +62,7 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 
 	List<StatusTable> getXIPIMonitoringData() throws URISyntaxException{
 		
-		client = new InfinityClientWeb(new URI(xipiUriString));
+		client = new InfinityClientWeb(new URI(Utils.XIPI_URI_STRING));
 //		client = new InfinityClientMock();
 		
 		
@@ -84,12 +83,8 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			statusTable.setId(infinityValueID.getValue());
 			
 			InfinityInfrastructure infinityInfrastructure = getInfrastuctureByID(new Integer(id));
-//			System.out.println("STATUS IS: "+infinityInfrastructure.getStatus());
 			
 			if(infinityInfrastructure.getStatus() != null && infinityInfrastructure.getStatus()!=""){
-				//TODO: how does status look like in json(if it is not empty) from XIPI? There is no example
-				//testbed with state information from XIPI response. Get this information and map this to 
-				//status table states.
 			}else
 				statusTable.setStatus(StatusTable.UNDEFINED);
 			
@@ -107,8 +102,7 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 		if(monitoringData.get(statusTable.getId())!=null)
 		monitoringData.put(statusTable.getId(), statusTable);
 	}
-	
-//	@Override
+
 	public StatusTable getMonitoringDataById(String id) {
 		return monitoringData.get(id);
 	}

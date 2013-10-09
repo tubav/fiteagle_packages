@@ -17,19 +17,28 @@ public class OMLServerTest {
 	
 	@Before
 	public void setup() {
-		omlServer = new OMLServer();
+//		omlServer = new OMLServer();
 		client = new OMLClientMock();
 //		omlServer.run();
 	}
 
 	@Test
 	public void testPushMonitoringData() {
+		client.run();
+	}
+	
+	@Test
+	public void testPushMonitoringFromAFile() {
+//		String hostName="localhost";
+//		int portNumber=3434;
+//		String pathToFile = "/path/to/OMLStreamFile.txt";
+//		client = new OMLClientMock(hostName, portNumber, pathToFile);
 //		client.run();
 	}
 	
 	@After
 	public void teardown(){
-		omlServer.terminate();
+//		omlServer.terminate();
 	}
 	
 

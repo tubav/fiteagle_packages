@@ -19,17 +19,14 @@ import org.fiteagle.core.monitoring.StatusTable;
 
 public class ClientHandler implements Runnable {
 	Socket socket;
-	long timeForOldLastCheckedInMilis = 15778463000L;
+	long timeForOldLastCheckedInMilis = 15778463000L; // default 6 months
 
 	public ClientHandler(Socket s) {
 		socket = s;
 	}
 
-//	@Override
 	public void run() {
 		
-		//TODO: get the testbed name from header not from lines!!
-
 		BufferedReader in;
 		PrintWriter out = null;
 		HashMap <Integer, String> componentSchemaNames = new HashMap<Integer, String>();
@@ -41,7 +38,6 @@ public class ClientHandler implements Runnable {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			String str;
 			String testbedName = null;
-//			String testbedStatus = StatusTable.UNDEFINED;
 
 			while ((str = in.readLine()) != null) {
 				StatusTable componentStatusTable = new StatusTable();
@@ -90,6 +86,8 @@ public class ClientHandler implements Runnable {
 //					componentStatusTable.setId(strArray[1]);
 					componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
 
+					//TODO: think about getting the strArray[1] as description!! add this to somewhere in look! Investigate this usage if it is common.
+					
 					if (strArray[2].compareTo("1") == 0) {
 						if (isLastCheckedOld(lastCheckedDate)) {
 							componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
@@ -121,61 +119,6 @@ public class ClientHandler implements Runnable {
 
 			}
 
-			// while ((str=in.readLine()) != null) {
-			// StatusTable componentStatusTable = new StatusTable();
-			//
-			// if(str.contains("domain:"))
-			// testbedName=str.split(":")[1].trim();
-			//
-			// if(str.length()>0 && Character.isDigit(str.charAt(0))){
-			// String[] strArray = parseLine(str);
-			// Date lastCheckedDate = new Date();
-			// if(strArray[3]!=null)
-			// lastCheckedDate = parseStringToDate(strArray[3]);
-			//
-			// componentStatusTable.setLastCheck(lastCheckedDate);
-			// componentStatusTable.setId(strArray[1]);
-			//
-			// if(strArray[2].compareTo("1")==0){
-			// if(isLastCheckedOld(lastCheckedDate)){
-			// upAndLastCheckedOld = true;
-			// componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
-			// }else
-			// componentStatusTable.setStatus(StatusTable.UP);
-			// oneComponentIsUp=true;
-			// if(testbedStatus.compareTo(StatusTable.PARTIALLY)!=0){
-			// if (testbedStatus.compareTo(StatusTable.DOWN) == 0){
-			// testbedStatus = StatusTable.PARTIALLY;
-			// }else
-			// testbedStatus=StatusTable.UP;
-			// }
-			// }
-			//
-			// if(strArray[2].compareTo("0")==0){
-			// componentStatusTable.setStatus(StatusTable.DOWN);
-			// testbedStatus = StatusTable.PARTIALLY;
-			// }
-			//
-			// if(lastCheckedDate.before(lastChecked))
-			// lastChecked=lastCheckedDate;
-			//
-			// statusTable.addComponent(componentStatusTable);
-			//
-			// }
-			// if(!oneComponentIsUp)
-			// testbedStatus = StatusTable.DOWN;
-			//
-			// statusTable.setLastCheck(lastChecked);
-			// if(testbedStatus.compareTo(StatusTable.UP)==0 &&
-			// upAndLastCheckedOld)
-			// testbedStatus=StatusTable.UP_AND_LAST_CHECKED_OLD;
-			// statusTable.setStatus(testbedStatus);
-			// if(testbedName!=null){
-			// statusTable.setId(testbedName);
-			// new MonitoringManager().pushMonitoringData(statusTable);
-			// }
-			//
-			// }
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());

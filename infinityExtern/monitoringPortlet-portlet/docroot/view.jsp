@@ -33,6 +33,3 @@
 			</tbody>
 		</table>
 	</div>
-
-     This is the <b>MonitoringPortlet</b> portlet.
-

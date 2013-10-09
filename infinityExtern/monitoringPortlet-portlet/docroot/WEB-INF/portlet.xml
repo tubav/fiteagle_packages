@@ -8,7 +8,7 @@
 >
 	<portlet>
 		<portlet-name>monitoringPortlet</portlet-name>
-		<display-name>MonitoringPortlet</display-name>
+		<display-name>Testbeds</display-name>
 		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -19,8 +19,8 @@
 			<mime-type>text/html</mime-type>
 		</supports>
 		<portlet-info>
-			<title>MonitoringPortlet</title>
-			<short-title>MonitoringPortlet</short-title>
+			<title>Testbeds</title>
+			<short-title>Testbeds</short-title>
 			<keywords>MonitoringPortlet</keywords>
 		</portlet-info>
 		<security-role-ref>

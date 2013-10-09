@@ -323,6 +323,11 @@ input.search-query{height:24px !important;}
 	
 }
 
+#statusTable > tbody > tr > td.detailsButton  {
+	cursor: pointer;
+	
+}
+
 #statusTable > tbody > tr > td.rowAlignLeft  {
 	text-align: left;
 	

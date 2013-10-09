@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.fiteagle.interactors.monitoring.MonitoringManager;
+import org.fiteagle.interactors.monitoring.Utils;
 
 public class OMLServer implements Runnable {
 	
@@ -23,10 +24,9 @@ public class OMLServer implements Runnable {
 	}
 	
 	public void run() {
-		int portNumber = 3434;
 		ServerSocket serverSocket;
 		try {
-			serverSocket = new ServerSocket(portNumber);
+			serverSocket = new ServerSocket(Utils.OML_SERVER_PORT_NUMBER);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());

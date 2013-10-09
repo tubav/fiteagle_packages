@@ -21,7 +21,6 @@ public class StatusTable {
 	private String xipiId;
 	private HashMap<String, StatusTable> components;
 
-	// private List<StatusTable>components;
 	// private String name;
 
 	public String getId() {

@@ -56,28 +56,6 @@ public abstract class InfinityClient {
 
 	public InputStream fixXIPIEncoding(InputStream in) {
 
-		// ByteArrayOutputStream out = new ByteArrayOutputStream();
-		// byte[] buffer = new byte[1024];
-		// int len;
-		// try {
-		// while ((len = in.read(buffer)) > -1) {
-		// out.write(buffer, 0, len);
-		// }
-		// } catch (IOException e2) {
-		// throw new RuntimeException(e2.getMessage());
-		// }
-		// try {
-		// out.flush();
-		// } catch (IOException e1) {
-		// throw new RuntimeException(e1.getMessage());
-		// }
-		//
-		// byte[] utf8 = null;
-		// try {
-		// utf8 = new String(out.toByteArray(), "ISO-8859-1").getBytes("UTF-8");
-		// } catch (UnsupportedEncodingException e) {
-		// throw new RuntimeException(e.getMessage());
-		// }
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024];
@@ -97,67 +75,14 @@ public abstract class InfinityClient {
 
 		byte[] utf8 = null;
 		try {
-			// utf8 = new String(out.toByteArray(),
-			// "ISO-8859-1").getBytes("UTF-8");
-//			utf8 = new String(out.toByteArray(), "WINDOWS-1252").getBytes("UTF-8");
 			utf8 = new String(out.toByteArray(), "cp1252").getBytes("UTF-8");
-//			 utf8 = new String(out.toByteArray()).getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 
-		// FileOutputStream fileOutput = null;
-		// try {
-		// fileOutput = new FileOutputStream(new
-		// File("/home/ozanoo/testSil/responseFromXIPI"+i));
-		// i++;
-		// } catch (FileNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// try {
-		// out.writeTo(fileOutput);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
 		return new ByteArrayInputStream(utf8);
 	}
 
-	public String fixXIPIEncodingStr(InputStream is) {
-		BufferedReader in;
-		String jsonline = "";
-		try {
-			in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
-			LinkedList<String> lines = new LinkedList();
-			String readLine;
-
-			while ((readLine = in.readLine()) != null) {
-				lines.add(readLine);
-			}
-
-			for (String line : lines) {
-				// logger.info("Response = " + line);
-				jsonline = jsonline + line;
-			}
-
-			return jsonline;
-
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		} catch (IllegalStateException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
-	}
-	
-	
 
 	public String convertStreamToString(InputStream is) {
 		@SuppressWarnings("resource")

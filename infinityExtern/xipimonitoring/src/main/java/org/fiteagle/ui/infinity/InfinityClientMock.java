@@ -1,14 +1,8 @@
 package org.fiteagle.ui.infinity;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import org.fiteagle.ui.infinity.model.InfinityArrayList;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
