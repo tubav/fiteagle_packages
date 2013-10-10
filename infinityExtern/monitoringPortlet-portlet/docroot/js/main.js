@@ -41,6 +41,14 @@ function showDetailedStatus(data) {
 	if (data.components) {
 		sortStatusLines(data.components);
 		for ( var k in data.components) {
+			alert("id before processing: "+data.components[k].id);
+			
+			//the testbed name can be added into the components name, while defining the schema names in OML (oml4py.py). Delete this for a better look.
+			if (data.components[k].id.indexOf(data.id+"_") >= 0)
+				data.components[k].id = data.components[k].id.replace(data.id+"_", '');
+			
+			alert("id after processing: "+data.components[k].id);
+			
 			componentStatus += buildDetailRow(data.components[k]);
 		}
 		$("#tbComponentStatus").html(componentStatus);

@@ -1,3 +1,3 @@
 The oml4py-simple-example.py contains a simple example for pushing the OML streams. This needs the oml4py client, which can be downloaded here: https://github.com/mytestbed/oml4py
 
-this client adds at the beginning of the component names always the domain name(testbed name)!
+The oml4py client adds at the beginning of the component names always the domain name(testbed name)! If the names of the components needed to be specified otherwise, a simple java client OMLClientMock can be used (under test folder) with a specified OML stream file (OMLServerTest class has an example of usage).
