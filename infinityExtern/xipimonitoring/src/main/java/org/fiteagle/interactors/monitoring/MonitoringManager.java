@@ -31,6 +31,8 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	
 	public MonitoringManager() {
 		if(!serverStarted){
+			//TODO: read properties and set the utilities if properies file is not there!
+			
 			new Thread(omlServer).start();
 			serverStarted=true;
 		}
