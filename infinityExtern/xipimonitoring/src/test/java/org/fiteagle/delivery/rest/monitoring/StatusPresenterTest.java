@@ -1,3 +1,4 @@
+package org.fiteagle.delivery.rest.monitoring;
 //package org.fiteagle.delivery.rest.fiteagle;
 //
 //import static org.junit.Assert.*;

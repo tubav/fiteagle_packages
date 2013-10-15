@@ -33,17 +33,13 @@ import math
 from datetime import datetime
 import pytz
 
+#"fiteagle" => app-name, not needed
+#"FOKUS FUSECO Playground" => domain (testbed name)
+#"fuseco.fokus.fraunhofer.de" => sender-id, not needed
+#"tcp:130.149.22.71:3434" => the address to send the stream
+omlInst = oml4py.OMLBase("fiteagle", "FOKUS FUSECO Playground", "fuseco.fokus.fraunhofer.de", "tcp:130.149.22.71:3434")
 
-#omlInst = oml4py.OMLBase("fiteagle", "FUSECO", "fuseco.fokus.fraunhofer.de", "tcp:flsmonitor.ilabt.iminds.be:3003")
-#omlInst = oml4py.OMLBase("fiteagle", "FUSECO", "fuseco.fokus.fraunhofer.de", "tcp:localhost:3434")
-#"fiteagle" => app-name
-#"FOKUS FUSECO Playground" => domain
-#"fuseco.fokus.fraunhofer.de" => sender-id
-#"tcp:localhost:3434" => the address to send the stream
-omlInst = oml4py.OMLBase("fiteagle", "FOKUS FUSECO Playground", "fuseco.fokus.fraunhofer.de", "tcp:localhost:3434")
-#omlInst = oml4py.OMLBase("fiteagle", "16K Visualization Tiled Display", "fuseco.fokus.fraunhofer.de", "tcp:localhost:3434")
-
-#omlInst = oml4py.OMLBase("fiteagle", "FOKUS FUSECO Playground", "fuseco.fokus.fraunhofer.de", "tcp:fuseco.fokus.fraunhofer.de:3434")
+#Definition of testbed components...
 #schema instances defining the structure of the stream.
 #schema: 1 FOKUS FUSECO Playground_laptop node:string up:double last_check:string
 omlInst.addmp("laptop", "node:string up:double last_check:string")
@@ -59,6 +55,10 @@ while True:
     tz=pytz.timezone("Europe/Berlin")
     aware_dt=tz.localize(datetime.now())
     current=aware_dt.isoformat() #datetime.now().isoformat() #time.time()
+    #"laptop" => component name
+    #"Fed4FIRE EPC Demo Laptop" => component message, not needed
+    #1(component status) => component is up and running, if 0 => component is down
+    #"2013-03-14T12:34:34.102734+02:00" => date of last check on component
     omlInst.inject("laptop", [ "Fed4FIRE EPC Demo Laptop", 1, "2013-03-14T12:34:34.102734+02:00" ])
     omlInst.inject("epc_wifi", [ "Fed4FIRE EPC WiFi", 0, current ])
     omlInst.inject("fiteagle", [ "FITeagle AM", 1, current ])
