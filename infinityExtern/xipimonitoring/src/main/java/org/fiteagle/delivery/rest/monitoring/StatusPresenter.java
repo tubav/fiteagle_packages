@@ -1,5 +1,8 @@
 package org.fiteagle.delivery.rest.monitoring;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -9,6 +12,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+import java.util.prefs.Preferences;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,6 +23,7 @@ import javax.ws.rs.QueryParam;
 
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
 import org.fiteagle.interactors.monitoring.MonitoringManager;
+import org.fiteagle.interactors.monitoring.Utils;
 
 import org.fiteagle.core.monitoring.StatusTable;
 
@@ -30,7 +36,6 @@ public class StatusPresenter {
 	@Path("")
 	@Produces("application/json")
 	public List<TestbedStatus> getStatus() {
-		
 		ArrayList<TestbedStatus> status = new ArrayList<TestbedStatus>(); 
 		
 		Collection<StatusTable> monitoringData = monitor.getMonitoringData();
