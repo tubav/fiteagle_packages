@@ -41,11 +41,14 @@ function showDetailedStatus(data) {
 	if (data.components) {
 		sortStatusLines(data.components);
 		for ( var k in data.components) {
-			
-			//the testbed name can be added into the components name, while defining the schema names in OML (oml4py.py). Delete this for a better look.
-			if (data.components[k].id.indexOf(data.id+"_") >= 0)
-				data.components[k].id = data.components[k].id.replace(data.id+"_", '');
-						
+
+			// the testbed name can be added into the components name, while
+			// defining the schema names in OML (oml4py.py). Delete this for a
+			// better look.
+			if (data.components[k].id.indexOf(data.id + "_") >= 0)
+				data.components[k].id = data.components[k].id.replace(data.id
+						+ "_", '');
+
 			componentStatus += buildDetailRow(data.components[k]);
 		}
 		$("#tbComponentStatus").html(componentStatus);
@@ -113,12 +116,31 @@ buildDetailRow = function(testbedstatus) {
 	// var row =
 	// '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td>'+testbedstatus.id+'</td><td>'+new
 	// Date(testbedstatus.lastCheck).toString()+'</td></tr>';
+
 	var lastCheckStr = 'unknown';
 	if (testbedstatus.lastCheck != null)
 		lastCheckStr = new Date(testbedstatus.lastCheck).toString();
+	
+	var statusMessgId = "message"+testbedstatus.id;
 	var row = '<tr><td>' + getStatusIcon(testbedstatus.status)
 			+ '</td><td class="rowAlignLeft">' + testbedstatus.id + '</td><td>'
-			+ lastCheckStr + '</td></tr>';
+			+ lastCheckStr + '</td>' + '<td id="' + statusMessgId
+			+ '" class="statusMsg">' + 
+			'<ul>status message'+
+			'<li id="' + "txt"+statusMessgId + '" class="hidden">' + testbedstatus.statusMessage + '</li>'
+			+'</ul>'
+			
+			+'</td>' +
+			+'</tr>';
+	
+
+	$(document).on(
+			"click",
+			'#'+statusMessgId,
+			function() {
+				$('#txt'+statusMessgId).slideToggle();
+			});
+
 	return row;
 }
 

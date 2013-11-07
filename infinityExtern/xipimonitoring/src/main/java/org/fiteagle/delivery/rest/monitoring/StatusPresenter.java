@@ -64,6 +64,7 @@ public class StatusPresenter {
 		testbedStatus.setId(statusTable.getId());
 		testbedStatus.setLastCheck(statusTable.getLastCheck());
 		testbedStatus.setStatus(statusTable.getStatus());
+		testbedStatus.setStatusMessage(statusTable.getStatusMessage());
 		
 		if(statusTable.getComponents()!=null){
 			Collection<StatusTable> components = statusTable.getComponents();

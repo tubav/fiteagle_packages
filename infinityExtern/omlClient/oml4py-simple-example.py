@@ -42,11 +42,11 @@ omlInst = oml4py.OMLBase("fiteagle", "FOKUS FUSECO Playground", "fuseco.fokus.fr
 #Definition of testbed components...
 #schema instances defining the structure of the stream.
 #schema: 1 FOKUS FUSECO Playground_laptop node:string up:double last_check:string
-omlInst.addmp("laptop", "node:string up:double last_check:string")
+omlInst.addmp("laptop", "statusMessage:string up:double last_check:string")
 #schema: 2 FOKUS FUSECO Playground_epc_wifi node:string up:double last_check:string
-omlInst.addmp("epc_wifi", "node:string up:double last_check:string")
+omlInst.addmp("epc_wifi", "statusMessage:string up:double last_check:string")
 #schema: 3 FOKUS FUSECO Playground_fiteagle node:string up:double last_check:string
-omlInst.addmp("fiteagle", "node:string up:double last_check:string")
+omlInst.addmp("fiteagle", "statusMessage:string up:double last_check:string")
 
 omlInst.start()
 
@@ -56,12 +56,12 @@ while True:
     aware_dt=tz.localize(datetime.now())
     current=aware_dt.isoformat() #datetime.now().isoformat() #time.time()
     #"laptop" => component name
-    #"Fed4FIRE EPC Demo Laptop" => component message, not needed
+    #"up and running" => component message
     #1(component status) => component is up and running, if 0 => component is down
     #"2013-03-14T12:34:34.102734+02:00" => date of last check on component
-    omlInst.inject("laptop", [ "Fed4FIRE EPC Demo Laptop", 1, "2013-03-14T12:34:34.102734+02:00" ])
-    omlInst.inject("epc_wifi", [ "Fed4FIRE EPC WiFi", 0, current ])
-    omlInst.inject("fiteagle", [ "FITeagle AM", 1, current ])
+    omlInst.inject("laptop", [ "fine", 1, "2013-03-14T12:34:34.102734+02:00" ])
+    omlInst.inject("epc_wifi", [ "up and running", 1, current ])
+    omlInst.inject("fiteagle", [ "executing server update", 0, current ])
     time.sleep(7)
 
 omlInst.close()

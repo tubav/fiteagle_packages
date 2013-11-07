@@ -77,3 +77,9 @@ p{text-align:justify}
 	max-width: 2em;
 	min-width: 1em;
 }
+
+
+#tbComponentStatus > tr > td.statusMsg  {
+	cursor: pointer;
+	
+}

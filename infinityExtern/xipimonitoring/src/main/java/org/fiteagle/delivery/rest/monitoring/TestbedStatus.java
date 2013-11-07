@@ -9,6 +9,7 @@ public class TestbedStatus {
 	private String id;
 	private String status;
 	private Date lastCheck;
+	private String statusMessage;
 	private List<TestbedStatus> components;
 
 	public TestbedStatus() {
@@ -52,5 +53,13 @@ public class TestbedStatus {
 			components = new ArrayList<TestbedStatus>();
 			
 		this.components.add(component);
+	}
+
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+
+	public void setStatusMessage(String message) {
+		this.statusMessage = message;
 	}
 }

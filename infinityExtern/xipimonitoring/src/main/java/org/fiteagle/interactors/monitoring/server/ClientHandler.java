@@ -63,7 +63,8 @@ public class ClientHandler implements Runnable {
 						if(schemaNr == 0) continue;
 						startOfSchemaName = i+1;
 					}
-					int endOfSchemaName = schemaNrAndName.lastIndexOf("node");
+//					int endOfSchemaName = schemaNrAndName.lastIndexOf("node");
+					int endOfSchemaName = schemaNrAndName.lastIndexOf("statusMessage");
 					
 					String schemaName = schemaNrAndName.substring(startOfSchemaName, endOfSchemaName).trim();
 					componentSchemaNames.put(schemaNr, schemaName);
@@ -85,8 +86,8 @@ public class ClientHandler implements Runnable {
 					componentStatusTable.setLastCheck(lastCheckedDate);
 //					componentStatusTable.setId(strArray[1]);
 					componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
-
-					//TODO: think about getting the strArray[1] as description!! add this to somewhere in look! Investigate this usage if it is common.
+					
+					componentStatusTable.setStatusMessage(strArray[1]);
 					
 					if (strArray[2].compareTo("1") == 0) {
 						if (isLastCheckedOld(lastCheckedDate)) {

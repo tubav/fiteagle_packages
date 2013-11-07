@@ -115,13 +115,15 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			statusTable.setXipiId(id);
 			statusTable.setId(infinityValueID.getValue());
 
-			InfinityInfrastructure infinityInfrastructure = getInfrastuctureByID(new Integer(
-					id));
-
-			if (infinityInfrastructure.getStatus() != null
-					&& infinityInfrastructure.getStatus() != "") {
-			} else
-				statusTable.setStatus(StatusTable.UNDEFINED);
+			//status does not give information about the status of testbed or component => do not get the infrastructures one by one!!
+//			InfinityInfrastructure infinityInfrastructure = getInfrastuctureByID(new Integer(
+//					id));
+//
+//			if (infinityInfrastructure.getStatus() != null
+//					&& infinityInfrastructure.getStatus() != "") {
+//			} else
+			
+			statusTable.setStatus(StatusTable.UNDEFINED);
 
 			result.add(statusTable);
 		}

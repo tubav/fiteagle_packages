@@ -19,6 +19,7 @@ public class StatusTable {
 	private Date lastCheck;
 	private String organization;
 	private String xipiId;
+	private String statusMessage;
 	private HashMap<String, StatusTable> components;
 
 	// private String name;
@@ -84,6 +85,14 @@ public class StatusTable {
 			components = new HashMap<String, StatusTable>();
 
 		this.components.put(component.getId(), component);
+	}
+
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
 	}
 
 }
