@@ -51,6 +51,11 @@ p{text-align:justify}
 	
 }
 
+.detailsButton  {
+	cursor: pointer;
+	
+}
+
 #statusTable > tbody > tr > td.rowAlignLeft  {
 	text-align: left;
 	
@@ -78,6 +83,10 @@ p{text-align:justify}
 	min-width: 1em;
 }
 
+.status {
+	max-width: 2em;
+	min-width: 1em;
+}
 
 #tbComponentStatus > tr > td.statusMsg  {
 	cursor: pointer;

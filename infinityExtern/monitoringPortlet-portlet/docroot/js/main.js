@@ -105,10 +105,16 @@ buildRow = function(testbedstatus) {
 	// class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td
 	// class="detailsButton" '+'id="'+testbedstatus.id+'"><a
 	// href="/path/to/your/stuff/?id='+theID+'">Details</a></td></tr>';
-	var row = '<tr><td>' + getStatusIcon(testbedstatus.status)
-			+ '</td><td class="rowAlignLeft">' + testbedstatus.id + '</td><td>'
-			+ lastCheckStr + '</td><td class="detailsButton" ' + 'id="'
-			+ testbedstatus.id + '">Details</td></tr>';
+	
+//	var row = '<tr><td>' + getStatusIcon(testbedstatus.status)
+//			+ '</td><td class="rowAlignLeft">' + testbedstatus.id + '</td><td>'
+//			+ lastCheckStr + '</td><td class="detailsButton" ' + 'id="'
+//			+ testbedstatus.id + '">Details</td></tr>';
+	
+	var row = '<tr class="detailsButton" ' + 'id="'
+	+ testbedstatus.id + '"><td>' + getStatusIcon(testbedstatus.status)
+	+ '</td><td class="rowAlignLeft">' + testbedstatus.id + '</td><td>'
+	+ lastCheckStr + '</td><td>Details</td></tr>';
 	return row;
 }
 
