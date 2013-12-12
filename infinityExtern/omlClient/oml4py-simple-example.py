@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright (c) 2012-2013 NICTA, Olivier Mehani
+# Copyright (c) 2013 TUB, Alexander Willner
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,35 +34,24 @@ import math
 from datetime import datetime
 import pytz
 
-#"fiteagle" => app-name, not needed
-#"FOKUS FUSECO Playground" => domain (testbed name)
-#"fuseco.fokus.fraunhofer.de" => sender-id, not needed
-#"tcp:130.149.22.71:3434" => the address to send the stream
-omlInst = oml4py.OMLBase("fiteagle", "FOKUS FUSECO Playground", "fuseco.fokus.fraunhofer.de", "tcp:130.149.22.71:3434")
+omlInst = oml4py.OMLBase("APP_NAME", "TESTBED_NAME", "SENDER_ID",
+                         "tcp:XIPI_MONITORING_URL:XIPI_MONITORING_IP")
 
-#Definition of testbed components...
-#schema instances defining the structure of the stream.
-#schema: 1 FOKUS FUSECO Playground_laptop node:string up:double last_check:string
-omlInst.addmp("laptop", "statusMessage:string up:double last_check:string")
-#schema: 2 FOKUS FUSECO Playground_epc_wifi node:string up:double last_check:string
-omlInst.addmp("epc_wifi", "statusMessage:string up:double last_check:string")
-#schema: 3 FOKUS FUSECO Playground_fiteagle node:string up:double last_check:string
-omlInst.addmp("fiteagle", "statusMessage:string up:double last_check:string")
+#Definition of testbed components
+#schema: resource statusMessage:string up:double last_check:string
+omlInst.addmp("RES_NAME1", "statusMessage:string up:double last_check:string")
+omlInst.addmp("RES_NAME2", "statusMessage:string up:double last_check:string") 
+omlInst.addmp("RES_NAME3", "statusMessage:string up:double last_check:string")
 
 omlInst.start()
 
-#for i in range(15):
 while True:
     tz=pytz.timezone("Europe/Berlin")
     aware_dt=tz.localize(datetime.now())
-    current=aware_dt.isoformat() #datetime.now().isoformat() #time.time()
-    #"laptop" => component name
-    #"up and running" => component message
-    #1(component status) => component is up and running, if 0 => component is down
-    #"2013-03-14T12:34:34.102734+02:00" => date of last check on component
-    omlInst.inject("laptop", [ "fine", 1, "2013-03-14T12:34:34.102734+02:00" ])
-    omlInst.inject("epc_wifi", [ "up and running", 1, current ])
-    omlInst.inject("fiteagle", [ "executing server update", 0, current ])
+    current=aware_dt.isoformat()
+    omlInst.inject("RES_NAME1", [ "up and running", 1, current])
+    omlInst.inject("RES_NAME2", [ "up and running", 1, current])
+    omlInst.inject("RES_NAME3", [ "executing server update", 0, current])
     time.sleep(7)
 
 omlInst.close()
