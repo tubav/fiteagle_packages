@@ -5,5 +5,8 @@ public class Utils {
 	public static String PATH_PORTLET = "/InfinityServices-portlet/json";
 	public static int OML_SERVER_PORT_NUMBER=3434;
 	public static String OML_SERVER_HOSTNAME = "localhost";
+	public static long timeForOldLastCheckedInMilis = 60000L; //default 1 minute
+	public static long timeForTooOldNotAcceptableLastCheckedInMilis = 172800000L; //default 2 days
+	public static int scheduledStatusCheckPeriod = 5;
 	
 }

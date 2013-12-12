@@ -1,7 +1,6 @@
 package org.fiteagle.interactors.monitoring.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,12 +13,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.fiteagle.interactors.monitoring.MonitoringManager;
+import javax.xml.bind.DatatypeConverter;
+
 import org.fiteagle.core.monitoring.StatusTable;
+import org.fiteagle.interactors.monitoring.MonitoringManager;
+import org.fiteagle.interactors.monitoring.TestbedStatusCheck;
+import org.fiteagle.interactors.monitoring.Utils;
 
 public class ClientHandler implements Runnable {
 	Socket socket;
-	long timeForOldLastCheckedInMilis = 15778463000L; // default 6 months
 
 	public ClientHandler(Socket s) {
 		socket = s;
@@ -81,8 +83,11 @@ public class ClientHandler implements Runnable {
 					String[] strArray = parseLine(str);
 
 					Date lastCheckedDate = null;
-					if (strArray[3] != null)
+					if (strArray[3] != null){
 						lastCheckedDate = parseStringToDate(strArray[3]);
+						//TODO: check if the last checked is in future!
+						if(new TestbedStatusCheck().isLastCheckedTooOld(lastCheckedDate)) continue;
+					}
 					componentStatusTable.setLastCheck(lastCheckedDate);
 //					componentStatusTable.setId(strArray[1]);
 					componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
@@ -90,7 +95,7 @@ public class ClientHandler implements Runnable {
 					componentStatusTable.setStatusMessage(strArray[1]);
 					
 					if (strArray[2].compareTo("1") == 0) {
-						if (isLastCheckedOld(lastCheckedDate)) {
+						if (new TestbedStatusCheck().isLastCheckedOld(lastCheckedDate)) {
 							componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
 						} else
 							componentStatusTable.setStatus(StatusTable.UP);
@@ -114,7 +119,7 @@ public class ClientHandler implements Runnable {
 						statusTable.addComponent(componentStatusTable);
 					}
 
-					statusTable = updateStatusTableState(statusTable);
+					statusTable = new TestbedStatusCheck().updateStatusTableState(statusTable);
 					new MonitoringManager().pushMonitoringData(statusTable);
 				}
 
@@ -135,78 +140,17 @@ public class ClientHandler implements Runnable {
 
 	}
 
-	private StatusTable updateStatusTableState(StatusTable statusTable) {
-
-		Date lastChecked = new Date();
-		statusTable.setStatus(StatusTable.UNDEFINED);
-
-		Collection<StatusTable> components = statusTable.getComponents();
-
-		for (Iterator iterator = components.iterator(); iterator.hasNext();) {
-			StatusTable statusTableComponent = (StatusTable) iterator.next();
-
-			if (statusTableComponent.getStatus().compareTo(StatusTable.UP) == 0) {
-				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
-					statusTable.setStatus(StatusTable.PARTIALLY);
-				}
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
-					statusTable.setStatus(StatusTable.UP);
-			}
-
-			if (statusTableComponent.getStatus().compareTo(
-					StatusTable.UP_AND_LAST_CHECKED_OLD) == 0) {
-				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
-					statusTable.setStatus(StatusTable.PARTIALLY);
-				}
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
-					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
-				if (statusTable.getStatus().compareTo(StatusTable.UP) == 0)
-					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
-			}
-
-			if (statusTableComponent.getStatus().compareTo(StatusTable.DOWN) == 0) {
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0
-						|| statusTable.getStatus().compareTo(StatusTable.DOWN) == 0)
-					statusTable.setStatus(StatusTable.DOWN);
-				else
-					statusTable.setStatus(StatusTable.PARTIALLY);
-			}
-
-			if (statusTableComponent.getStatus().compareTo(
-					StatusTable.UNDEFINED) == 0) {
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0) {
-					statusTable.setStatus(StatusTable.UNDEFINED);
-				} else if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
-					statusTable.setStatus(StatusTable.DOWN);
-				} else
-					statusTable.setStatus(StatusTable.PARTIALLY);
-			}
-
-			if (statusTableComponent.getLastCheck().before(lastChecked))
-				lastChecked = statusTableComponent.getLastCheck();
-		}
-
-		statusTable.setLastCheck(lastChecked);
-
-		return statusTable;
-	}
-
-	private boolean isLastCheckedOld(Date lastCheckedDate) {
-		Date now = new Date();
-		long nowInMilis = now.getTime();
-		long lastCheckedDateInMilis = lastCheckedDate.getTime();
-
-		return (nowInMilis - lastCheckedDateInMilis) > timeForOldLastCheckedInMilis;
-	}
-
 	private Date parseStringToDate(String dateString) throws ParseException {
-		SimpleDateFormat simpleDate = new SimpleDateFormat(
-				"yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
-
-		StringBuilder dateStrBuilder = new StringBuilder(dateString);
-		dateStrBuilder.deleteCharAt(dateString.lastIndexOf(":"));
-
-		return simpleDate.parse(dateStrBuilder.toString());
+//		SimpleDateFormat simpleDate = new SimpleDateFormat(
+//				"yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
+//
+//		StringBuilder dateStrBuilder = new StringBuilder(dateString);
+//		dateStrBuilder.deleteCharAt(dateString.lastIndexOf(":"));
+//
+//		return simpleDate.parse(dateStrBuilder.toString());
+//		
+		Calendar response = DatatypeConverter.parseDate(dateString);
+		return new Date(response.getTimeInMillis());
 
 	}
 

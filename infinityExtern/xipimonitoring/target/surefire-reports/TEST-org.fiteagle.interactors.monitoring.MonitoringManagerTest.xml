@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="5.253" errors="0" skipped="0" tests="2" name="org.fiteagle.interactors.monitoring.MonitoringManagerTest">
+<testsuite failures="0" time="2.209" errors="0" skipped="0" tests="2" name="org.fiteagle.interactors.monitoring.MonitoringManagerTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/opt/Oracle_Java/jdk1.7.0_17/jre/lib/amd64"/>
@@ -24,7 +24,7 @@
 "/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/home/ozanoo/workspaces/infinityWorkspace1/.metadata/.plugins/org.eclipse.m2e.core/launches/m2conf5057877401928411857.tmp"/>
+    <property name="classworlds.conf" value="/home/ozanoo/workspaces/infinityWorkspace1/.metadata/.plugins/org.eclipse.m2e.core/launches/m2conf2356746957591305725.tmp"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -58,6 +58,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="5.251" classname="org.fiteagle.interactors.monitoring.MonitoringManagerTest" name="testGetXIPIMonitoringData"/>
+  <testcase time="2.207" classname="org.fiteagle.interactors.monitoring.MonitoringManagerTest" name="testGetXIPIMonitoringData"/>
   <testcase time="0" classname="org.fiteagle.interactors.monitoring.MonitoringManagerTest" name="getMonitoringDataById"/>
 </testsuite>

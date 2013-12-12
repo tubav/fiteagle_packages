@@ -94,5 +94,9 @@ public class StatusTable {
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
+	
+	public void removeComponent(StatusTable component) {
+		this.components.remove(component.getId());
+	}
 
 }

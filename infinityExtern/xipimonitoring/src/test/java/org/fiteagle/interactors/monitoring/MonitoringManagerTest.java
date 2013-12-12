@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -29,27 +30,45 @@ public class MonitoringManagerTest {
 	public void testGetXIPIMonitoringData() throws URISyntaxException {
 		List<StatusTable> result = monitoringManager.getXIPIMonitoringData();
 		Assert.assertNotNull(result);
+		Assert.assertFalse(result.isEmpty());
 		
 	}
 
 	@Test
-	public void getMonitoringDataById(){
-//		monitoringManager.getXIPIMonitoringData();
-//		StatusTable statusTable = new StatusTable();
-//		statusTable.setId("FOKUS FUSECO Playground");
-//		statusTable.setLastCheck(new Date());
-//		statusTable.setStatus("up");
-//		StatusTable component= new StatusTable();
-//		component.setId("componentId");
-//		component.setStatus("up");
-//		component.setLastCheck(new Date());
-//		statusTable.addComponent(component);
-//		
-//		monitoringManager.pushMonitoringData(statusTable);
-//		StatusTable data = monitoringManager.getMonitoringDataById("FOKUS FUSECO Playground");
-//		Assert.assertNull(data);
-//		Assert.assertEquals("FOKUS FUSECO Playground", data.getId());
-//		Assert.assertEquals("up", data.getStatus());
+	public void getMonitoringDataById() throws URISyntaxException{
+		monitoringManager.getMonitoringData();
+		StatusTable statusTable = new StatusTable();
+		statusTable.setId("FOKUS FUSECO Playground");
+		
+		statusTable.setLastCheck(new Date());
+		statusTable.setStatus("up");
+		
+		
+		StatusTable component= new StatusTable();
+		component.setId("componentId");
+		component.setStatus("up");
+		
+		Date date = new Date();
+		long timeInMilis = date.getTime();
+//		System.out.println("last checked in req: "+timeInMilis);
+		component.setLastCheck(date);
+		
+		statusTable.addComponent(component);
+		
+		monitoringManager.pushMonitoringData(statusTable);
+		StatusTable data = monitoringManager.getMonitoringDataById("FOKUS FUSECO Playground");
+		Assert.assertNotNull(data);
+		Assert.assertEquals("FOKUS FUSECO Playground", data.getId());
+		Assert.assertEquals("up", data.getStatus());
+		
+		Collection<StatusTable> components = data.getComponents();
+		StatusTable responseComponent = components.iterator().next();
+		Assert.assertNotNull(responseComponent);
+		Assert.assertEquals("componentId", responseComponent.getId());
+		Assert.assertEquals("up", data.getStatus());
+		Assert.assertEquals(timeInMilis, responseComponent.getLastCheck().getTime());
+		
+//		System.out.println("time in response: "+responseComponent.getLastCheck().getTime());
 	}
 	
 }
