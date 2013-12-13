@@ -40,7 +40,12 @@ public class OMLServer implements Runnable {
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
 			}
-			(new Thread(new ClientHandler(socket))).start();
+			try {
+				(new Thread(new ClientHandler(socket))).start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 		try {
 			socket.close();

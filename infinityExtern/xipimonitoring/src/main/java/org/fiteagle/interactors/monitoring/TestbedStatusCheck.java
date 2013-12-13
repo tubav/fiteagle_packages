@@ -11,15 +11,17 @@ public class TestbedStatusCheck {
 	long timeForTooOldNotAcceptableLastCheckedInMilis = Utils.timeForTooOldNotAcceptableLastCheckedInMilis;
 	
 	public boolean isLastCheckedOld(Date lastCheckedDate) {
-		Date now = new Date();
-		long nowInMilis = now.getTime();
+		long nowInMilis = getNowInMilis();
 		long lastCheckedDateInMilis = lastCheckedDate.getTime();
 		return (nowInMilis - lastCheckedDateInMilis) > timeForOldLastCheckedInMilis;
 	}
+
+	public long getNowInMilis() {
+		return new Date().getTime();
+	}
 	
 	public boolean isLastCheckedTooOld(Date lastCheckedDate) {
-		Date now = new Date();
-		long nowInMilis = now.getTime();
+		long nowInMilis = getNowInMilis();
 		long lastCheckedDateInMilis = lastCheckedDate.getTime();
 		return (nowInMilis - lastCheckedDateInMilis) > timeForTooOldNotAcceptableLastCheckedInMilis;
 	}

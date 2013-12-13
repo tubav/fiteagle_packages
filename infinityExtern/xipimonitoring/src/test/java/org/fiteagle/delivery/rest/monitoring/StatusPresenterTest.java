@@ -58,7 +58,7 @@ public class StatusPresenterTest {
 		statusTable.setStatus("up");
 		
 		StatusTable component= new StatusTable();
-		component.setId("componentId");
+		component.setId("testComponent");
 		component.setStatus("up");
 		Date date = new Date();
 		long timeInMilis = date.getTime();
@@ -76,7 +76,7 @@ public class StatusPresenterTest {
 		Collection<TestbedStatus> components = data.getComponents();
 		TestbedStatus responseComponent = components.iterator().next();
 		Assert.assertNotNull(responseComponent);
-		Assert.assertEquals("componentId", responseComponent.getId());
+		Assert.assertEquals("testComponent", responseComponent.getId());
 		Assert.assertEquals("up", data.getStatus());
 		Assert.assertEquals(timeInMilis, responseComponent.getLastCheck().getTime());
 	}
