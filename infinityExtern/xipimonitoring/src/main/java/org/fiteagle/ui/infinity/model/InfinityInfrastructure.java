@@ -1,149 +1,187 @@
 package org.fiteagle.ui.infinity.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class InfinityInfrastructure{
-   	private InfinityArrayList blocks;
-   	private InfinityArrayList categories;
-   	private String country;
-   	private InfinityArrayList endusers;
-   	private Number id;
-   	private Number infradescid;
-   	private String javaClass;
-   	private String latitude;
-   	private String logo;
-   	private String longitude;
-   	private String nameToUpperCase;
-   	private String name_;
-   	private InfinityArrayList  nendusers;
-   	private String organization;
-   	private InfinityArrayList ownerType;
-   	private InfinityArrayList  scenarios;
-   	private String shortName;
-   	private String status;
-   	private ArrayList<String> tags;
-   	
-   	private String description;
-   	
+public class InfinityInfrastructure {
+	private InfinityArrayList blocks;
+	private InfinityArrayList categories;
+	private String country;
+	private InfinityArrayList endusers;
+	private Number id;
+	private Number infradescid;
+	private String javaClass;
+	private String latitude;
+	private String logo;
+	private String longitude;
+	private String nameToUpperCase;
+	private String name_;
+	private InfinityArrayList nendusers;
+	private String organization;
+	private InfinityArrayList ownerType;
+	private InfinityArrayList scenarios;
+	private String shortName;
+	private String status;
+	private List<String> tags;
 
- 	public InfinityArrayList getBlocks(){
+	private String description;
+
+	public InfinityArrayList getBlocks() {
 		return this.blocks;
 	}
-	public void setBlocks(InfinityArrayList blocks){
+
+	public void setBlocks(final InfinityArrayList blocks) {
 		this.blocks = blocks;
 	}
- 	public InfinityArrayList getCategories(){
+
+	public InfinityArrayList getCategories() {
 		return this.categories;
 	}
-	public void setCategories(InfinityArrayList categories){
+
+	public void setCategories(final InfinityArrayList categories) {
 		this.categories = categories;
 	}
- 	public String getCountry(){
+
+	public String getCountry() {
 		return this.country;
 	}
-	public void setCountry(String country){
+
+	public void setCountry(final String country) {
 		this.country = country;
 	}
- 	public InfinityArrayList getEndusers(){
+
+	public InfinityArrayList getEndusers() {
 		return this.endusers;
 	}
-	public void setArrayList(InfinityArrayList endusers){
+
+	public void setArrayList(final InfinityArrayList endusers) {
 		this.endusers = endusers;
 	}
- 	public Number getId(){
+
+	public Number getId() {
 		return this.id;
 	}
-	public void setId(Number id){
+
+	public void setId(final Number id) {
 		this.id = id;
 	}
- 	public Number getInfradescid(){
+
+	public Number getInfradescid() {
 		return this.infradescid;
 	}
-	public void setInfradescid(Number infradescid){
+
+	public void setInfradescid(final Number infradescid) {
 		this.infradescid = infradescid;
 	}
- 	public String getJavaClass(){
+
+	public String getJavaClass() {
 		return this.javaClass;
 	}
-	public void setJavaClass(String javaClass){
+
+	public void setJavaClass(final String javaClass) {
 		this.javaClass = javaClass;
 	}
- 	public String getLatitude(){
+
+	public String getLatitude() {
 		return this.latitude;
 	}
-	public void setLatitude(String latitude){
+
+	public void setLatitude(final String latitude) {
 		this.latitude = latitude;
 	}
- 	public String getLogo(){
+
+	public String getLogo() {
 		return this.logo;
 	}
-	public void setLogo(String logo){
+
+	public void setLogo(final String logo) {
 		this.logo = logo;
 	}
- 	public String getLongitude(){
+
+	public String getLongitude() {
 		return this.longitude;
 	}
-	public void setLongitude(String longitude){
+
+	public void setLongitude(final String longitude) {
 		this.longitude = longitude;
 	}
- 	public String getNameToUpperCase(){
+
+	public String getNameToUpperCase() {
 		return this.nameToUpperCase;
 	}
-	public void setNameToUpperCase(String nameToUpperCase){
+
+	public void setNameToUpperCase(final String nameToUpperCase) {
 		this.nameToUpperCase = nameToUpperCase;
 	}
- 	public String getName_(){
+
+	public String getName_() {
 		return this.name_;
 	}
-	public void setName_(String name_){
+
+	public void setName_(final String name_) {
 		this.name_ = name_;
 	}
- 	public InfinityArrayList getnendusers(){
+
+	public InfinityArrayList getnendusers() {
 		return this.nendusers;
 	}
-	public void setnendusers(InfinityArrayList nendusers){
+
+	public void setnendusers(final InfinityArrayList nendusers) {
 		this.nendusers = nendusers;
 	}
- 	public String getOrganization(){
+
+	public String getOrganization() {
 		return this.organization;
 	}
-	public void setOrganization(String organization){
+
+	public void setOrganization(final String organization) {
 		this.organization = organization;
 	}
- 	public InfinityArrayList getOwnerType(){
+
+	public InfinityArrayList getOwnerType() {
 		return this.ownerType;
 	}
-	public void setOwnerType(InfinityArrayList ownerType){
+
+	public void setOwnerType(final InfinityArrayList ownerType) {
 		this.ownerType = ownerType;
 	}
- 	public InfinityArrayList getScenarios(){
+
+	public InfinityArrayList getScenarios() {
 		return this.scenarios;
 	}
-	public void setScenarios(InfinityArrayList scenarios){
+
+	public void setScenarios(final InfinityArrayList scenarios) {
 		this.scenarios = scenarios;
 	}
- 	public String getShortName(){
+
+	public String getShortName() {
 		return this.shortName;
 	}
-	public void setShortName(String shortName){
+
+	public void setShortName(final String shortName) {
 		this.shortName = shortName;
 	}
- 	public String getStatus(){
+
+	public String getStatus() {
 		return this.status;
 	}
-	public void setStatus(String status){
+
+	public void setStatus(final String status) {
 		this.status = status;
 	}
- 	public ArrayList<String>  getTags(){
+
+	public List<String> getTags() {
 		return this.tags;
 	}
-	public void setTags(ArrayList<String> tags){
+
+	public void setTags(final List<String> tags) {
 		this.tags = tags;
 	}
+
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
-	public void setDescription(String description) {
+
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 }

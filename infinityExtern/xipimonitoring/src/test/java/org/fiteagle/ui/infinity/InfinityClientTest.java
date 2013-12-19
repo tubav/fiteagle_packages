@@ -18,39 +18,41 @@ public class InfinityClientTest {
 
 	@Before
 	public void setup() throws URISyntaxException {
-		URI uri = new URI("http://www.xipi.eu");
+		final URI uri = new URI("http://www.xipi.eu");
 		this.client = new InfinityClientWeb(uri);
-//		this.client = new InfinityClientMock();
+		// this.client = new InfinityClientMock();
 	}
 
 	@Test
 	public void testGetInfrastructuresById() {
-		InfinityInfrastructure result = this.client.getInfrastructuresById(900);
+		final InfinityInfrastructure result = this.client
+				.getInfrastructuresById(900);
 		Assert.assertEquals(900, result.getId());
 		Assert.assertEquals("Autonomous Province of Trento",
 				result.getOrganization());
 	}
-	
+
 	@Test
 	public void testSearchInfrastructures() {
-		ArrayList<InfinityValueID> result = this.client.searchInfrastructures();
+		final ArrayList<InfinityValueID> result = (ArrayList<InfinityValueID>) this.client
+				.searchInfrastructures();
 		Assert.assertNotNull(result);
 	}
-	
+
 	@Test
-	public void testGetTechnicalComponents(){
-		ArrayList<InfinityValueID> result = this.client.getTechnicalComponents();
+	public void testGetTechnicalComponents() {
+		final ArrayList<InfinityValueID> result = (ArrayList<InfinityValueID>) this.client
+				.getTechnicalComponents();
 		Assert.assertNotNull(result);
 	}
-	
+
 	@Test
-	public void testGetComponentDetail(){
-		String infrastructureId="900";
-		String componentId="242";
-		ArrayList<InfinityArrayList> result = this.client.getComponentDetail(infrastructureId, componentId);
+	public void testGetComponentDetail() {
+		final String infrastructureId = "900";
+		final String componentId = "242";
+		final ArrayList<InfinityArrayList> result = (ArrayList<InfinityArrayList>) this.client
+				.getComponentDetail(infrastructureId, componentId);
 		Assert.assertNotNull(result);
 	}
-	
-	
-	
+
 }

@@ -6,35 +6,44 @@ public class InfinityValueID {
 	private String other;
 	private String name;
 	private String javaClass;
-	
+
 	public String getJavaClass() {
-		return javaClass;
+		return this.javaClass;
 	}
-	public void setJavaClass(String javaClass) {
+
+	public void setJavaClass(final String javaClass) {
 		this.javaClass = javaClass;
 	}
+
 	public String getName() {
-		return name;
+		return this.name;
 	}
-	public void setName(String name) {
+
+	public void setName(final String name) {
 		this.name = name;
 	}
+
 	public String getId() {
-		return id;
+		return this.id;
 	}
-	public void setId(String id) {
+
+	public void setId(final String id) {
 		this.id = id;
 	}
+
 	public String getValue() {
-		return value;
+		return this.value;
 	}
-	public void setValue(String value) {
+
+	public void setValue(final String value) {
 		this.value = value;
 	}
+
 	public String getOther() {
-		return other;
+		return this.other;
 	}
-	public void setOther(String other) {
+
+	public void setOther(final String other) {
 		this.other = other;
 	}
 }

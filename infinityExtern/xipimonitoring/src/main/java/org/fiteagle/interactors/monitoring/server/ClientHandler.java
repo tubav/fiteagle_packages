@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -18,99 +20,122 @@ import org.fiteagle.interactors.monitoring.TestbedStatusCheck;
 public class ClientHandler implements Runnable {
 	private TestbedStatusCheck testbedStatusCheck = new TestbedStatusCheck();
 	Socket socket;
-	HashMap <Integer, String> componentSchemaNames = new HashMap<Integer, String>();
-	private BufferedReader in;
+	Map<Integer, String> componentSchemaNames = new HashMap<Integer, String>();
+	private final BufferedReader in;
 
-	public ClientHandler(BufferedReader in) {
-		this.in=in;
-	}
-	
-	public ClientHandler(Socket s) throws IOException {
-		this(new BufferedReader(new InputStreamReader(
-				s.getInputStream())));
-		this.socket=s;
+	public ClientHandler(final BufferedReader in) {
+		this.in = in;
 	}
 
+	public ClientHandler(final Socket s) throws IOException {
+		this(new BufferedReader(new InputStreamReader(s.getInputStream(),
+				StandardCharsets.UTF_8)));
+		this.socket = s;
+	}
+
+	@Override
 	public void run() {
-		
+
 		try {
-			processRequest(in);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			this.processRequest(this.in);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			try {
-				if(socket!=null) socket.close();
-			} catch (IOException e) {
+				if (this.socket != null) {
+					this.socket.close();
+				}
+			} catch (final IOException e) {
 				e.printStackTrace();
-				throw new RuntimeException(e.getMessage());
+				throw new RuntimeException(e);
 			}
 		}
 
 	}
 
-	private void processRequest(BufferedReader in) throws IOException,
+	private void processRequest(final BufferedReader in) throws IOException,
 			ParseException {
 		String str;
 		String testbedName = null;
 
 		while ((str = in.readLine()) != null) {
-			StatusTable componentStatusTable = new StatusTable();
-			
+			final StatusTable componentStatusTable = new StatusTable();
+
 			str = str.trim();
 
-			if (str.contains("domain:"))
+			if (str.contains("domain:")) {
 				testbedName = str.split(":")[1].trim();
-			
-			if(str.startsWith("schema:")){
-				String schemaNrAndName = str.split(":")[1].trim();
+			}
+
+			if (str.startsWith("schema:")) {
+				final String schemaNrAndName = str.split(":")[1].trim();
 				Integer schemaNr = null;
 				int startOfSchemaName;
 				int i = 0;
-				while (!Character.isDigit(schemaNrAndName.charAt(i)) && schemaNrAndName.length() > i) i++;
-				if(i==schemaNrAndName.length()-1) 
-					throw new RuntimeException("Schema definition in OML Stream is wrong");
-				if(Character.isDigit(schemaNrAndName.charAt(i+1))){
-					schemaNr = Integer.parseInt(schemaNrAndName.substring(i, i+1));
-					startOfSchemaName = i+2;
-				}else{
-					schemaNr = Integer.parseInt(new String(new char[]{schemaNrAndName.charAt(i)}));
-					if(schemaNr == 0) continue;
-					startOfSchemaName = i+1;
+				while (!Character.isDigit(schemaNrAndName.charAt(i))
+						&& (schemaNrAndName.length() > i)) {
+					i++;
 				}
-//					int endOfSchemaName = schemaNrAndName.lastIndexOf("node");
-				int endOfSchemaName = schemaNrAndName.lastIndexOf("statusMessage");
-				
-				String schemaName = schemaNrAndName.substring(startOfSchemaName, endOfSchemaName).trim();
-				componentSchemaNames.put(schemaNr, schemaName);
-			}
-				
-				
+				if (i == (schemaNrAndName.length() - 1)) {
+					throw new RuntimeException(
+							"Schema definition in OML Stream is wrong");
+				}
+				if (Character.isDigit(schemaNrAndName.charAt(i + 1))) {
+					schemaNr = Integer.parseInt(schemaNrAndName.substring(i,
+							i + 1));
+					startOfSchemaName = i + 2;
+				} else {
+					schemaNr = Integer.parseInt(new String(
+							new char[] { schemaNrAndName.charAt(i) }));
+					if (schemaNr == 0) {
+						continue;
+					}
+					startOfSchemaName = i + 1;
+				}
+				// int endOfSchemaName = schemaNrAndName.lastIndexOf("node");
+				final int endOfSchemaName = schemaNrAndName
+						.lastIndexOf("statusMessage");
 
-			if (str.length() > 0 && Character.isDigit(str.charAt(0))) {
-				
-				if (testbedName == null || testbedName.compareTo("")==0)
+				final String schemaName = schemaNrAndName.substring(
+						startOfSchemaName, endOfSchemaName).trim();
+				this.componentSchemaNames.put(schemaNr, schemaName);
+			}
+
+			if ((str.length() > 0) && Character.isDigit(str.charAt(0))) {
+
+				if ((testbedName == null) || (testbedName.compareTo("") == 0)) {
 					throw new RuntimeException(
 							"The testbed name must be set as domain!");
+				}
 
-				String[] strArray = parseLine(str);
+				final String[] strArray = this.parseLine(str);
 
 				Date lastCheckedDate = null;
-				if (strArray[3] != null){
-					lastCheckedDate = parseStringToDate(strArray[3]);
-					//TODO: check if the last checked is in future!
-					if(this.testbedStatusCheck.isLastCheckedTooOld(lastCheckedDate)) continue;
+				if (strArray[3] != null) {
+					lastCheckedDate = this.parseStringToDate(strArray[3]);
+					if (this.testbedStatusCheck
+							.isLastCheckedInFuture(lastCheckedDate)) {
+						continue;
+					}
+					if (this.testbedStatusCheck
+							.isLastCheckedTooOld(lastCheckedDate)) {
+						continue;
+					}
 				}
 				componentStatusTable.setLastCheck(lastCheckedDate);
-//					componentStatusTable.setId(strArray[1]);
-				componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
-				
+				componentStatusTable.setId(this.componentSchemaNames
+						.get(new Integer(strArray[0])));
+
 				componentStatusTable.setStatusMessage(strArray[1]);
-				
+
 				if (strArray[2].compareTo("1") == 0) {
-					if (this.testbedStatusCheck.isLastCheckedOld(lastCheckedDate)) {
-						componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
-					} else
+					if (this.testbedStatusCheck
+							.isLastCheckedOld(lastCheckedDate)) {
+						componentStatusTable
+								.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+					} else {
 						componentStatusTable.setStatus(StatusTable.UP);
+					}
 				}
 
 				if (strArray[2].compareTo("0") == 0) {
@@ -131,33 +156,28 @@ public class ClientHandler implements Runnable {
 					statusTable.addComponent(componentStatusTable);
 				}
 
-				statusTable = testbedStatusCheck.updateStatusTableState(statusTable);
+				statusTable = this.testbedStatusCheck
+						.updateStatusTableState(statusTable);
 				new MonitoringManager().pushMonitoringData(statusTable);
 			}
 
 		}
 	}
 
-	private Date parseStringToDate(String dateString) throws ParseException {
-//		SimpleDateFormat simpleDate = new SimpleDateFormat(
-//				"yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
-//
-//		StringBuilder dateStrBuilder = new StringBuilder(dateString);
-//		dateStrBuilder.deleteCharAt(dateString.lastIndexOf(":"));
-//
-//		return simpleDate.parse(dateStrBuilder.toString());
-//		
-		Calendar response = DatatypeConverter.parseDate(dateString);
+	private Date parseStringToDate(final String dateString)
+			throws ParseException {
+		final Calendar response = DatatypeConverter.parseDate(dateString);
 		return new Date(response.getTimeInMillis());
 
 	}
 
-	private String[] parseLine(String str) {
-		if (str == null)
+	private String[] parseLine(final String str) {
+		if (str == null) {
 			return null;
+		}
 
-		String[] strArr = str.split("\t");
-		String[] response = new String[4];
+		final String[] strArr = str.split("\t");
+		final String[] response = new String[4];
 
 		response[0] = strArr[1].trim();
 		response[1] = strArr[3].trim();
@@ -167,11 +187,8 @@ public class ClientHandler implements Runnable {
 		return response;
 	}
 
-//	public TestbedStatusCheck getTestbedStatusCheck() {
-//		return testbedStatusCheck;
-//	}
-
-	public void setTestbedStatusCheck(TestbedStatusCheck testbedStatusCheck) {
+	public void setTestbedStatusCheck(
+			final TestbedStatusCheck testbedStatusCheck) {
 		this.testbedStatusCheck = testbedStatusCheck;
 	}
 }

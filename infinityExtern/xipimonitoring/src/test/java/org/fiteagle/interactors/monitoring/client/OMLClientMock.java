@@ -1,7 +1,6 @@
 package org.fiteagle.interactors.monitoring.client;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,12 +14,11 @@ import org.fiteagle.interactors.monitoring.Utils;
 
 public class OMLClientMock {
 
-	String hostName = Utils.OML_SERVER_HOSTNAME;
-	int portNumber = Utils.OML_SERVER_PORT_NUMBER;
-	String pathToPushOMLString = "/pushOMLString.txt";
+	String hostName = Utils.getOmlServerHostName();
+	int portNumber = Utils.getOmlServerPortNumber();
+	private String pathToPushOMLString = "/pushOMLString.txt";
 	private String pathToOMLStreamFile = null;
-	
-	
+
 	InputStream inputStream = null;
 	Socket socket = null;
 	PrintWriter out = null;
@@ -28,19 +26,20 @@ public class OMLClientMock {
 	public OMLClientMock() {
 	}
 
-	public OMLClientMock(String hostName, int portNumber) {
+	public OMLClientMock(final String hostName, final int portNumber) {
 		this.hostName = hostName;
 		this.portNumber = portNumber;
 	}
 
-	public OMLClientMock(String hostName, int portNumber,
-			InputStream inputStream) {
+	public OMLClientMock(final String hostName, final int portNumber,
+			final InputStream inputStream) {
 		this.hostName = hostName;
 		this.portNumber = portNumber;
 		this.inputStream = inputStream;
 	}
 
-	public OMLClientMock(String hostName, int portNumber, String pathToFile) {
+	public OMLClientMock(final String hostName, final int portNumber,
+			final String pathToFile) {
 		this.hostName = hostName;
 		this.portNumber = portNumber;
 		this.pathToOMLStreamFile = pathToFile;
@@ -50,55 +49,65 @@ public class OMLClientMock {
 	public void run() {
 		if (this.inputStream == null) {
 			try {
-				inputStream = getInputStream();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				this.inputStream = this.getInputStream();
+			} catch (final FileNotFoundException e) {
+				throw new RuntimeException(e);
 			}
 		}
 
-		processInputStream(inputStream);
+		this.processInputStream(this.inputStream);
 	}
 
-	private void processInputStream(InputStream inputStream) {
-		BufferedReader in = new BufferedReader(new InputStreamReader(
+	private void processInputStream(final InputStream inputStream) {
+		final BufferedReader in = new BufferedReader(new InputStreamReader(
 				inputStream));
 		try {
-			socket = new Socket(hostName, portNumber);
-		} catch (UnknownHostException e) {
+			this.socket = new Socket(this.hostName, this.portNumber);
+		} catch (final UnknownHostException e) {
 			throw new RuntimeException(e.getMessage());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-		} catch (IOException e) {
+			this.out = new PrintWriter(this.socket.getOutputStream(), true);
+		} catch (final IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 
 		String line;
 		try {
 			while ((line = in.readLine()) != null) {
-				out.println(line);
-				out.flush();
+				this.out.println(line);
+				this.out.flush();
 			}
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			throw new RuntimeException(e1.getMessage());
 		}
 
-		out.close();
+		this.out.close();
 
 		try {
-			socket.close();
-		} catch (IOException e) {
+			this.socket.close();
+		} catch (final IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
 
 	private InputStream getInputStream() throws FileNotFoundException {
-		if (pathToOMLStreamFile == null)
-			return this.getClass().getResourceAsStream(pathToPushOMLString);
-		return new FileInputStream(pathToOMLStreamFile);
+		if (this.pathToOMLStreamFile == null) {
+			return this.getClass().getResourceAsStream(
+					this.getPathToPushOMLString());
+		}
+		return new FileInputStream(this.pathToOMLStreamFile);
 
+	}
+
+	public String getPathToPushOMLString() {
+		return this.pathToPushOMLString;
+	}
+
+	public void setPathToPushOMLString(final String pathToPushOMLString) {
+		this.pathToPushOMLString = pathToPushOMLString;
 	}
 
 }

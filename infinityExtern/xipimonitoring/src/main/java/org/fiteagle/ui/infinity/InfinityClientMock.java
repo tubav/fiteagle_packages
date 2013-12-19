@@ -1,8 +1,8 @@
 package org.fiteagle.ui.infinity;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.fiteagle.ui.infinity.model.InfinityArrayList;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
@@ -10,55 +10,64 @@ import org.fiteagle.ui.infinity.model.InfinityValueID;
 
 public class InfinityClientMock extends InfinityClient {
 
-	public InfinityInfrastructure getInfrastructuresById(Number i) {
+	@Override
+	public InfinityInfrastructure getInfrastructuresById(final Number i) {
 		String input;
-		try {
-			input = getMockedInput("/getInfrastructuresByIdResponse.json");
-		} catch (FileNotFoundException e1) {
-			throw new RuntimeException(e1.getMessage());
-		}
+		input = this.getMockedInput("/getInfrastructuresByIdResponse.json");
+
 		InfinityInfrastructure result = null;
 		try {
 			result = this.parser.parseGetInfrastructuresById(input);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 
 		return result;
-	}
-	
-	public ArrayList<InfinityValueID> searchInfrastructures() {
-		String input;
-		try {
-			input = getMockedInput("/searchInfrastructuresResponse.json");
-		} catch (FileNotFoundException e1) {
-			throw new RuntimeException(e1.getMessage());
-		}
-		ArrayList<InfinityValueID> result = null;
-		try {
-			result = this.parser.parseSearchInfrastructuresResponse(input);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		return result;
-	}
-
-	private String getMockedInput(String path) throws FileNotFoundException {
-		InputStream in = this.getClass().getResourceAsStream(path);
-		InputStream fixedIn = fixXIPIEncoding(in);
-		return convertStreamToString(fixedIn);
 	}
 
 	@Override
-	public ArrayList<InfinityValueID> getTechnicalComponents() {
+	public List<InfinityValueID> searchInfrastructures() {
+		String input;
+		input = this.getMockedInput("/searchInfrastructuresResponse.json");
+
+		List<InfinityValueID> result = null;
+		try {
+			result = this.parser.parseSearchInfrastructuresResponse(input);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		return result;
+	}
+
+	private String getMockedInput(final String path) {
+		final InputStream in = this.getClass().getResourceAsStream(path);
+		final InputStream fixedIn = this.fixXIPIEncoding(in);
+		final String result = this.convertStreamToString(fixedIn);
+
+		try {
+			in.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			fixedIn.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<InfinityValueID> getTechnicalComponents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<InfinityArrayList> getComponentDetail(
-			String infrastructureId, String componentId) {
+	public List<InfinityArrayList> getComponentDetail(
+			final String infrastructureId, final String componentId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

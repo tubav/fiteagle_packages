@@ -5,9 +5,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,157 +19,182 @@ import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
 import org.fiteagle.interactors.monitoring.server.OMLServer;
 import org.fiteagle.ui.infinity.InfinityClient;
 import org.fiteagle.ui.infinity.InfinityClientWeb;
-import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
 import org.fiteagle.ui.infinity.model.InfinityValueID;
 
 public class MonitoringManager implements ResourceMonitoringBoundary {
-	
-	private final static Logger LOGGER = Logger.getLogger(org.fiteagle.interactors.monitoring.MonitoringManager.class.getName()); 
 
-	private static HashMap<String, StatusTable> monitoringData = new HashMap<String, StatusTable>();
+	private final static Logger LOGGER = Logger
+			.getLogger(org.fiteagle.interactors.monitoring.MonitoringManager.class
+					.getName());
+
+	private static Map<String, StatusTable> monitoringData = new HashMap<String, StatusTable>();
 
 	private static boolean serverStarted = false;
 	private static OMLServer omlServer = new OMLServer();
 
-//	int scheduledStatusCheckPeriod = Utils.scheduledStatusCheckPeriod;
-
-	// InfinityClientMock client = new InfinityClientMock();
 	InfinityClient client;
 
 	public MonitoringManager() {
-		if (!serverStarted) {
-			setUtils();
+		if (!MonitoringManager.isServerStarted()) {
+			this.setUtils();
 
-			new Thread(omlServer).start();
-			serverStarted = true;
-			startRegularStatusCheck();
+			this.startServerAsThread();
+			MonitoringManager.setServerStarted(true);
+			this.startRegularStatusCheck();
 		}
 	}
 
+	private void startServerAsThread() {
+		new Thread(MonitoringManager.omlServer).start();
+	}
+
 	private void startRegularStatusCheck() {
-		ScheduledExecutorService statusCheckService = Executors
+		final ScheduledExecutorService statusCheckService = Executors
 				.newScheduledThreadPool(1);
-		Runnable service = new Runnable() {
+		final Runnable service = new Runnable() {
+			@Override
 			public void run() {
-				TestbedStatusCheck statusCheck = new TestbedStatusCheck();
-				if (monitoringData != null && monitoringData.size() > 0) {
-					Collection<StatusTable> testbeds = monitoringData.values();
-					for (Iterator iterator = testbeds.iterator(); iterator
-							.hasNext();) {
-						StatusTable testbed = (StatusTable) iterator.next();
-						if(testbed.getStatus().compareTo(StatusTable.UNDEFINED)==0) continue;
+				final TestbedStatusCheck statusCheck = new TestbedStatusCheck();
+				if ((MonitoringManager.monitoringData != null)
+						&& !MonitoringManager.monitoringData.isEmpty()) {
+					final Collection<StatusTable> testbeds = MonitoringManager.monitoringData
+							.values();
+					for (final Object element : testbeds) {
+						StatusTable testbed = (StatusTable) element;
+						if (testbed.getStatus()
+								.compareTo(StatusTable.UNDEFINED) == 0) {
+							continue;
+						}
 						testbed = statusCheck
 								.updateComponentsOfTestbed(testbed);
 						testbed = statusCheck.updateStatusTableState(testbed);
-						pushMonitoringData(testbed);
+						MonitoringManager.this.pushMonitoringData(testbed);
 					}
 				}
 			}
 		};
-		LOGGER.setLevel(Level.INFO);
-		LOGGER.info("Derived scheduled status check period is: "+Utils.scheduledStatusCheckPeriod);
+		MonitoringManager.LOGGER.setLevel(Level.INFO);
+		MonitoringManager.LOGGER
+				.info("Starting scheduled status check with time period: "
+						+ Utils.scheduledStatusCheckPeriod + " minutes");
 		statusCheckService.scheduleAtFixedRate(service,
-				Utils.scheduledStatusCheckPeriod, Utils.scheduledStatusCheckPeriod,
-				TimeUnit.MINUTES);
+				Utils.scheduledStatusCheckPeriod,
+				Utils.scheduledStatusCheckPeriod, TimeUnit.MINUTES);
 	}
 
 	private void setUtils() {
-		Preferences preferences = Preferences.userNodeForPackage(getClass());
+		final Preferences preferences = Preferences.userNodeForPackage(this
+				.getClass());
 
-		if (preferences.get("XIPI_URI_STRING", null) == null)
-			preferences.put("XIPI_URI_STRING", Utils.XIPI_URI_STRING);
-		else
-			Utils.XIPI_URI_STRING = preferences.get("XIPI_URI_STRING", null);
+		if (preferences.get("XIPI_URI_STRING", null) == null) {
+			preferences.put("XIPI_URI_STRING", Utils.xipiURIString);
+		} else {
+			Utils.xipiURIString = preferences.get("XIPI_URI_STRING", null);
+		}
 
-		if (preferences.get("OML_SERVER_HOSTNAME", null) == null)
-			preferences.put("OML_SERVER_HOSTNAME", Utils.OML_SERVER_HOSTNAME);
-		else
-			Utils.OML_SERVER_HOSTNAME = preferences.get("OML_SERVER_HOSTNAME",
-					null);
+		if (preferences.get("OML_SERVER_HOSTNAME", null) == null) {
+			preferences
+					.put("OML_SERVER_HOSTNAME", Utils.getOmlServerHostName());
+		} else {
+			Utils.setOmlServerHostName(preferences.get("OML_SERVER_HOSTNAME",
+					null));
+		}
 
-		if (preferences.get("PATH_PORTLET", null) == null)
-			preferences.put("PATH_PORTLET", Utils.PATH_PORTLET);
-		else
-			Utils.PATH_PORTLET = preferences.get("PATH_PORTLET", null);
+		if (preferences.get("PATH_PORTLET", null) == null) {
+			preferences.put("PATH_PORTLET", Utils.getPathPortlet());
+		} else {
+			Utils.setPathPortlet(preferences.get("PATH_PORTLET", null));
+		}
 
-		if (preferences.get("OML_SERVER_PORT_NUMBER", null) == null)
-			preferences.put("OML_SERVER_PORT_NUMBER", new Integer(
-					Utils.OML_SERVER_PORT_NUMBER).toString());
-		else
-			Utils.OML_SERVER_PORT_NUMBER = Integer.parseInt(preferences.get(
-					"OML_SERVER_PORT_NUMBER", null));
-		
-		if (preferences.get("TIME_FOR_LAST_CHECKED_OLD", null) == null)
-			preferences.put("TIME_FOR_LAST_CHECKED_OLD", milisInMinutes(
-					Utils.timeForOldLastCheckedInMilis).toString());
-		else
-			Utils.timeForOldLastCheckedInMilis = Long.parseLong(preferences.get(
-					"TIME_FOR_LAST_CHECKED_OLD", null))*60000L;
-		
-		if (preferences.get("TIME_FOR_LAST_CHECKED_TOO_OLD", null) == null)
-			preferences.put("TIME_FOR_LAST_CHECKED_TOO_OLD", milisInMinutes(
-					Utils.timeForTooOldNotAcceptableLastCheckedInMilis).toString());
-		else
-			Utils.timeForTooOldNotAcceptableLastCheckedInMilis = Long.parseLong(preferences.get(
-					"TIME_FOR_LAST_CHECKED_TOO_OLD", null))*60000L;
-		
-		
-		if (preferences.get("SCHEDULED_STATUS_CHECK_PERIOD", null) == null)
-			preferences.put("SCHEDULED_STATUS_CHECK_PERIOD", new Integer(
-					Utils.scheduledStatusCheckPeriod).toString());
-		else
-			Utils.scheduledStatusCheckPeriod = Integer.parseInt(preferences.get(
-					"SCHEDULED_STATUS_CHECK_PERIOD", null));
+		if (preferences.get("OML_SERVER_PORT_NUMBER", null) == null) {
+			preferences.put("OML_SERVER_PORT_NUMBER",
+					Integer.valueOf(Utils.getOmlServerPortNumber()).toString());
+		} else {
+			Utils.setOmlServerPortNumber(Integer.parseInt(preferences.get(
+					"OML_SERVER_PORT_NUMBER", null)));
+		}
+
+		if (preferences.get("TIME_FOR_LAST_CHECKED_OLD", null) == null) {
+			preferences.put("TIME_FOR_LAST_CHECKED_OLD",
+					this.milisInMinutes(Utils.timeForOldLastCheckedInMilis)
+							.toString());
+		} else {
+			Utils.timeForOldLastCheckedInMilis = Long.parseLong(preferences
+					.get("TIME_FOR_LAST_CHECKED_OLD", null)) * 60000L;
+		}
+
+		if (preferences.get("TIME_FOR_LAST_CHECKED_TOO_OLD", null) == null) {
+			preferences.put(
+					"TIME_FOR_LAST_CHECKED_TOO_OLD",
+					this.milisInMinutes(
+							Utils.timeForTooOldNotAcceptableLastCheckedInMilis)
+							.toString());
+		} else {
+			Utils.timeForTooOldNotAcceptableLastCheckedInMilis = Long
+					.parseLong(preferences.get("TIME_FOR_LAST_CHECKED_TOO_OLD",
+							null)) * 60000L;
+		}
+
+		if (preferences.get("SCHEDULED_STATUS_CHECK_PERIOD", null) == null) {
+			preferences.put("SCHEDULED_STATUS_CHECK_PERIOD",
+					Integer.valueOf(Utils.scheduledStatusCheckPeriod)
+							.toString());
+		} else {
+			Utils.scheduledStatusCheckPeriod = Integer.parseInt(preferences
+					.get("SCHEDULED_STATUS_CHECK_PERIOD", null));
+		}
 	}
 
-	private Long milisInMinutes(long milis) {
-		long minutes = milis/60000L;
-		return new Long(minutes);
+	private Long milisInMinutes(final long milis) {
+		final long minutes = milis / 60000L;
+		return Long.valueOf(minutes);
 	}
 
 	public void terminateOMLServer() {
-		omlServer.terminate();
+		MonitoringManager.omlServer.terminate();
 	}
 
+	@Override
 	public Collection<StatusTable> getMonitoringData() {
-		if (monitoringData.isEmpty()) {
+		if (MonitoringManager.monitoringData.isEmpty()) {
 			List<StatusTable> data;
 			try {
-				data = getXIPIMonitoringData();
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e.getMessage());
+				data = this.getXIPIMonitoringData();
+			} catch (final URISyntaxException e) {
+				throw new RuntimeException(e);
 			}
-			addMonitoringData(data);
+			this.addMonitoringData(data);
 		}
-		return monitoringData.values();
+		return MonitoringManager.monitoringData.values();
 	}
 
-	private void addMonitoringData(List<StatusTable> data) {
-		for (Iterator iterator = data.iterator(); iterator.hasNext();) {
-			StatusTable statusTable = (StatusTable) iterator.next();
-			monitoringData.put(statusTable.getId(), statusTable);
+	private void addMonitoringData(final List<StatusTable> data) {
+		for (final Object element : data) {
+			final StatusTable statusTable = (StatusTable) element;
+			MonitoringManager.monitoringData.put(statusTable.getId(),
+					statusTable);
 		}
 	}
 
 	List<StatusTable> getXIPIMonitoringData() throws URISyntaxException {
 
-		client = new InfinityClientWeb(new URI(Utils.XIPI_URI_STRING));
-		// client = new InfinityClientMock();
+		this.client = new InfinityClientWeb(new URI(Utils.xipiURIString));
 
-		ArrayList<InfinityValueID> infrastructures = client
+		final ArrayList<InfinityValueID> infrastructures = (ArrayList<InfinityValueID>) this.client
 				.searchInfrastructures();
 
-		ArrayList<StatusTable> result = new ArrayList<StatusTable>();
+		final ArrayList<StatusTable> result = new ArrayList<StatusTable>();
 
-		if (infrastructures == null)
+		if (infrastructures == null) {
 			return null;
+		}
 
-		for (Iterator iterator = infrastructures.iterator(); iterator.hasNext();) {
-			InfinityValueID infinityValueID = (InfinityValueID) iterator.next();
+		for (final Object element : infrastructures) {
+			final InfinityValueID infinityValueID = (InfinityValueID) element;
 
-			StatusTable statusTable = new StatusTable();
+			final StatusTable statusTable = new StatusTable();
 
-			String id = infinityValueID.getId();
+			final String id = infinityValueID.getId();
 			statusTable.setXipiId(id);
 			statusTable.setId(infinityValueID.getValue());
 
@@ -192,17 +216,39 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 		return result;
 	}
 
-	private InfinityInfrastructure getInfrastuctureByID(Number id) {
-		return client.getInfrastructuresById(id);
+	public final void pushMonitoringData(final StatusTable statusTable) {
+		if (MonitoringManager.monitoringData.get(statusTable.getId()) != null) {
+			MonitoringManager.monitoringData.put(statusTable.getId(),
+					statusTable);
+		}
 	}
 
-	public void pushMonitoringData(StatusTable statusTable) {
-		if (monitoringData.get(statusTable.getId()) != null)
-			monitoringData.put(statusTable.getId(), statusTable);
+	@Override
+	public StatusTable getMonitoringDataById(final String id) {
+		return MonitoringManager.monitoringData.get(id);
 	}
 
-	public StatusTable getMonitoringDataById(String id) {
-		return monitoringData.get(id);
+	public void reset() {
+		this.terminateOMLServer();
+		this.resetMonitoringData();
+		this.resetOMLServer();
+	}
+
+	private void resetOMLServer() {
+		MonitoringManager.setServerStarted(false);
+		MonitoringManager.omlServer = new OMLServer();
+	}
+
+	private void resetMonitoringData() {
+		MonitoringManager.monitoringData = new HashMap<String, StatusTable>();
+	}
+
+	public static boolean isServerStarted() {
+		return MonitoringManager.serverStarted;
+	}
+
+	public static void setServerStarted(final boolean serverStarted) {
+		MonitoringManager.serverStarted = serverStarted;
 	}
 
 }

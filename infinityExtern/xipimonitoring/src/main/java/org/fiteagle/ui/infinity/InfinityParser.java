@@ -3,6 +3,7 @@ package org.fiteagle.ui.infinity;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.fiteagle.ui.infinity.model.InfinityArrayList;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
@@ -17,42 +18,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InfinityParser {
 
-	private JsonFactory factory = new JsonFactory();
-	private ObjectMapper mapper = new ObjectMapper(factory);
+	private final JsonFactory factory = new JsonFactory();
+	private final ObjectMapper mapper = new ObjectMapper(this.factory);
 
-	public ArrayList<InfinityValueID> parseGetTechnicalComponentsResponse(
-			String string) throws JsonParseException, JsonMappingException,
-			IOException {
-		ArrayList<InfinityValueID> result = mapper.readValue(string,
+	public List<InfinityValueID> parseGetTechnicalComponentsResponse(
+			final String string) throws JsonParseException,
+			JsonMappingException, IOException {
+		final ArrayList<InfinityValueID> result = this.mapper.readValue(string,
 				new TypeReference<java.util.List<InfinityValueID>>() {
 				});
 		return result;
 	}
 
-	public InfinityInfrastructure parseGetInfrastructuresById(String input)
+	public InfinityInfrastructure parseGetInfrastructuresById(final String input)
 			throws JsonParseException, JsonMappingException, IOException {
-		InfinityInfrastructure result = mapper.readValue(input,
+		final InfinityInfrastructure result = this.mapper.readValue(input,
 				InfinityInfrastructure.class);
 		return result;
 	}
 
-	public ArrayList<InfinityArrayList> parseGetComponentDetailResponse(
-			String input) throws JsonParseException, JsonMappingException,
-			IOException {
-		ArrayList<InfinityArrayList> result = mapper.readValue(input,
-				new TypeReference<java.util.List<InfinityArrayList>>() {
+	public List<InfinityArrayList> parseGetComponentDetailResponse(
+			final String input) throws JsonParseException,
+			JsonMappingException, IOException {
+		final ArrayList<InfinityArrayList> result = this.mapper.readValue(
+				input, new TypeReference<java.util.List<InfinityArrayList>>() {
 				});
 		return result;
 	}
 
-	public ArrayList<InfinityValueID> parseSearchInfrastructuresResponse(
-			String input) throws JsonParseException, JsonMappingException,
-			IOException {
+	public List<InfinityValueID> parseSearchInfrastructuresResponse(
+			final String input) throws JsonParseException,
+			JsonMappingException, IOException {
 		return this.parseGetTechnicalComponentsResponse(input);
 	}
 
-	public void write(OutputStream stream, InfinityInfrastructure input)
-			throws JsonGenerationException, JsonMappingException, IOException {
+	public void write(final OutputStream stream,
+			final InfinityInfrastructure input) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		this.mapper.writeValue(stream, input);
 	}
 }

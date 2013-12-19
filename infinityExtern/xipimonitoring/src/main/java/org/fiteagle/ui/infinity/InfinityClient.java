@@ -1,17 +1,12 @@
 package org.fiteagle.ui.infinity;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Scanner;
 
 import org.fiteagle.ui.infinity.model.InfinityArrayList;
@@ -32,7 +27,7 @@ public abstract class InfinityClient {
 				"getComponentDetail");
 		private String value;
 
-		private Methods(String value) {
+		private Methods(final String value) {
 			this.value = value;
 		}
 
@@ -47,46 +42,45 @@ public abstract class InfinityClient {
 
 	public abstract InfinityInfrastructure getInfrastructuresById(Number i);
 
-	public abstract ArrayList<InfinityValueID> searchInfrastructures();
+	public abstract List<InfinityValueID> searchInfrastructures();
 
-	public abstract ArrayList<InfinityValueID> getTechnicalComponents();
+	public abstract List<InfinityValueID> getTechnicalComponents();
 
-	public abstract ArrayList<InfinityArrayList> getComponentDetail(
+	public abstract List<InfinityArrayList> getComponentDetail(
 			String infrastructureId, String componentId);
 
-	public InputStream fixXIPIEncoding(InputStream in) {
+	public InputStream fixXIPIEncoding(final InputStream in) {
 
-
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[1024];
 		int len;
 		try {
 			while ((len = in.read(buffer)) > -1) {
 				out.write(buffer, 0, len);
 			}
-		} catch (IOException e2) {
-			throw new RuntimeException(e2.getMessage());
+		} catch (final IOException e2) {
+			throw new RuntimeException(e2);
 		}
 		try {
 			out.flush();
-		} catch (IOException e1) {
-			throw new RuntimeException(e1.getMessage());
+		} catch (final IOException e1) {
+			throw new RuntimeException(e1);
 		}
 
 		byte[] utf8 = null;
 		try {
 			utf8 = new String(out.toByteArray(), "cp1252").getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e.getMessage());
+		} catch (final UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
 		}
 
 		return new ByteArrayInputStream(utf8);
 	}
 
-
-	public String convertStreamToString(InputStream is) {
+	public String convertStreamToString(final InputStream is) {
 		@SuppressWarnings("resource")
-		Scanner s = new Scanner(is).useDelimiter("\\A");
+		final Scanner s = new Scanner(is, StandardCharsets.UTF_8.toString())
+				.useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 

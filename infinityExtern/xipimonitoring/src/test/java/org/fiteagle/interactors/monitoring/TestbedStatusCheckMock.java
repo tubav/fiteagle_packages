@@ -1,23 +1,19 @@
 package org.fiteagle.interactors.monitoring;
 
 public class TestbedStatusCheckMock extends TestbedStatusCheck {
-	
+
 	private long now;
-	
-	
+
 	@Override
 	public long getNowInMilis() {
-		return getNow();
+		return this.getNow();
 	}
-	
-	
-	
 
 	public long getNow() {
-		return now;
+		return this.now;
 	}
 
-	public void setNow(long now) {
+	public void setNow(final long now) {
 		this.now = now;
 	}
 

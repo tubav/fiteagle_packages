@@ -2,71 +2,75 @@ package org.fiteagle.interactors.monitoring;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import org.fiteagle.core.monitoring.StatusTable;
 
 public class TestbedStatusCheck {
 	long timeForOldLastCheckedInMilis = Utils.timeForOldLastCheckedInMilis;
 	long timeForTooOldNotAcceptableLastCheckedInMilis = Utils.timeForTooOldNotAcceptableLastCheckedInMilis;
-	
-	public boolean isLastCheckedOld(Date lastCheckedDate) {
-		long nowInMilis = getNowInMilis();
-		long lastCheckedDateInMilis = lastCheckedDate.getTime();
-		return (nowInMilis - lastCheckedDateInMilis) > timeForOldLastCheckedInMilis;
+	long acceptableTimeDifferenceForNowInMilis = 60000L;
+
+	public boolean isLastCheckedOld(final Date lastCheckedDate) {
+		final long nowInMilis = this.getNowInMilis();
+		final long lastCheckedDateInMilis = lastCheckedDate.getTime();
+		return (nowInMilis - lastCheckedDateInMilis) > this.timeForOldLastCheckedInMilis;
 	}
 
 	public long getNowInMilis() {
 		return new Date().getTime();
 	}
-	
-	public boolean isLastCheckedTooOld(Date lastCheckedDate) {
-		long nowInMilis = getNowInMilis();
-		long lastCheckedDateInMilis = lastCheckedDate.getTime();
-		return (nowInMilis - lastCheckedDateInMilis) > timeForTooOldNotAcceptableLastCheckedInMilis;
+
+	public boolean isLastCheckedTooOld(final Date lastCheckedDate) {
+		final long nowInMilis = this.getNowInMilis();
+		final long lastCheckedDateInMilis = lastCheckedDate.getTime();
+		return (nowInMilis - lastCheckedDateInMilis) > this.timeForTooOldNotAcceptableLastCheckedInMilis;
 	}
-	
-	public StatusTable updateComponentsOfTestbed(StatusTable testbed){
-		
-		Collection<StatusTable> components = testbed.getComponents();
-		
-		if(components == null || components.size() == 0) return testbed;
-		
-		for (Iterator iterator = components.iterator(); iterator.hasNext();) {
-			StatusTable component= (StatusTable) iterator.next();
-			if(component.getLastCheck() != null){
-				if(isLastCheckedTooOld(component.getLastCheck())){
+
+	public StatusTable updateComponentsOfTestbed(final StatusTable testbed) {
+
+		final Collection<StatusTable> components = testbed.getComponents();
+
+		if ((components == null) || components.isEmpty()) {
+			return testbed;
+		}
+
+		for (final Object element : components) {
+			final StatusTable component = (StatusTable) element;
+			if (component.getLastCheck() != null) {
+				if (this.isLastCheckedTooOld(component.getLastCheck())) {
 					testbed.removeComponent(component);
 					continue;
 				}
-				if (component.getStatus().compareTo(StatusTable.UP)==0 && isLastCheckedOld(component.getLastCheck())) {
+				if ((component.getStatus().compareTo(StatusTable.UP) == 0)
+						&& this.isLastCheckedOld(component.getLastCheck())) {
 					component.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
 				}
 			}
 			testbed.addComponent(component);
-			
+
 		}
-		
+
 		return testbed;
-		
+
 	}
-	
-	public StatusTable updateStatusTableState(StatusTable statusTable) {
+
+	public StatusTable updateStatusTableState(final StatusTable statusTable) {
 
 		Date lastChecked = new Date();
 		statusTable.setStatus(StatusTable.UNDEFINED);
 
-		Collection<StatusTable> components = statusTable.getComponents();
+		final Collection<StatusTable> components = statusTable.getComponents();
 
-		for (Iterator iterator = components.iterator(); iterator.hasNext();) {
-			StatusTable statusTableComponent = (StatusTable) iterator.next();
+		for (final Object element : components) {
+			final StatusTable statusTableComponent = (StatusTable) element;
 
 			if (statusTableComponent.getStatus().compareTo(StatusTable.UP) == 0) {
 				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
 					statusTable.setStatus(StatusTable.PARTIALLY);
 				}
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0) {
 					statusTable.setStatus(StatusTable.UP);
+				}
 			}
 
 			if (statusTableComponent.getStatus().compareTo(
@@ -74,18 +78,21 @@ public class TestbedStatusCheck {
 				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
 					statusTable.setStatus(StatusTable.PARTIALLY);
 				}
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0) {
 					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
-				if (statusTable.getStatus().compareTo(StatusTable.UP) == 0)
+				}
+				if (statusTable.getStatus().compareTo(StatusTable.UP) == 0) {
 					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+				}
 			}
 
 			if (statusTableComponent.getStatus().compareTo(StatusTable.DOWN) == 0) {
-				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0
-						|| statusTable.getStatus().compareTo(StatusTable.DOWN) == 0)
+				if ((statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+						|| (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0)) {
 					statusTable.setStatus(StatusTable.DOWN);
-				else
+				} else {
 					statusTable.setStatus(StatusTable.PARTIALLY);
+				}
 			}
 
 			if (statusTableComponent.getStatus().compareTo(
@@ -94,16 +101,24 @@ public class TestbedStatusCheck {
 					statusTable.setStatus(StatusTable.UNDEFINED);
 				} else if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
 					statusTable.setStatus(StatusTable.DOWN);
-				} else
+				} else {
 					statusTable.setStatus(StatusTable.PARTIALLY);
+				}
 			}
 
-			if (statusTableComponent.getLastCheck().before(lastChecked))
+			if (statusTableComponent.getLastCheck().before(lastChecked)) {
 				lastChecked = statusTableComponent.getLastCheck();
+			}
 		}
 
 		statusTable.setLastCheck(lastChecked);
 
 		return statusTable;
+	}
+
+	public boolean isLastCheckedInFuture(final Date lastCheckedDate) {
+		final long nowInMilis = this.getNowInMilis();
+		final long lastCheckedDateInMilis = lastCheckedDate.getTime();
+		return (lastCheckedDateInMilis - nowInMilis) > this.acceptableTimeDifferenceForNowInMilis;
 	}
 }

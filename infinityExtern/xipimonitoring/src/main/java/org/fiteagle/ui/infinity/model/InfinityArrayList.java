@@ -8,21 +8,21 @@ public class InfinityArrayList {
 
 	private String javaClass;
 	private java.util.List<InfinityValueID> list = new ArrayList<InfinityValueID>();
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	public String getJavaClass() {
-		return javaClass;
+		return this.javaClass;
 	}
 
-	public void setJavaClass(String javaClass) {
+	public void setJavaClass(final String javaClass) {
 		this.javaClass = javaClass;
 	}
 
 	public java.util.List<InfinityValueID> getList() {
-		return list;
+		return this.list;
 	}
 
-	public void setList(java.util.List<InfinityValueID> list) {
+	public void setList(final java.util.List<InfinityValueID> list) {
 		this.list = list;
 	}
 
@@ -30,7 +30,7 @@ public class InfinityArrayList {
 		return this.additionalProperties;
 	}
 
-	public void setAdditionalProperties(String name, Object value) {
+	public void setAdditionalProperties(final String name, final Object value) {
 		this.additionalProperties.put(name, value);
 	}
 

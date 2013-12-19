@@ -3,7 +3,7 @@ package org.fiteagle.ui.infinity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.fiteagle.ui.infinity.model.InfinityArrayList;
@@ -24,58 +24,63 @@ public class InfinityParserTest {
 
 	@Test
 	public void testGetTechnicalComponentsParser() throws IOException {
-		String input = getMockedInput("/getTechnicalComponentsResponse.json");
-		ArrayList<InfinityValueID> result = this.parser
+		final String input = this
+				.getMockedInput("/getTechnicalComponentsResponse.json");
+		final List<InfinityValueID> result = this.parser
 				.parseGetTechnicalComponentsResponse(input);
 		Assert.assertFalse(result.isEmpty());
 	}
 
 	@Test
 	public void testGetInfrastructuresByIdParser() throws IOException {
-		String input = getMockedInput("/getInfrastructuresByIdResponse.json");
-		InfinityInfrastructure result = this.parser
+		final String input = this
+				.getMockedInput("/getInfrastructuresByIdResponse.json");
+		final InfinityInfrastructure result = this.parser
 				.parseGetInfrastructuresById(input);
 		Assert.assertNotNull(result);
 	}
 
 	@Test
 	public void testWritingGetInfrastructuresByIdResponse() throws IOException {
-		String input = getMockedInput("/getInfrastructuresByIdResponse.json");
-		InfinityInfrastructure result = this.parser
+		final String input = this
+				.getMockedInput("/getInfrastructuresByIdResponse.json");
+		final InfinityInfrastructure result = this.parser
 				.parseGetInfrastructuresById(input);
 		this.parser.write(new NullOutputStream(), result);
 	}
 
 	@Test
 	public void testGetComponentDetailResponseParser() throws IOException {
-		String input = getMockedInput("/getComponentDetailResponse.json");
-		ArrayList<InfinityArrayList> result = this.parser
+		final String input = this
+				.getMockedInput("/getComponentDetailResponse.json");
+		final List<InfinityArrayList> result = this.parser
 				.parseGetComponentDetailResponse(input);
 		Assert.assertFalse(result.isEmpty());
 	}
 
 	@Test
 	public void testSearchInfrastructuresResponseParser() throws IOException {
-		String input = getMockedInput("/searchInfrastructuresResponse.json");
-		ArrayList<InfinityValueID> result = this.parser
+		final String input = this
+				.getMockedInput("/searchInfrastructuresResponse.json");
+		final List<InfinityValueID> result = this.parser
 				.parseSearchInfrastructuresResponse(input);
 		Assert.assertFalse(result.isEmpty());
 	}
 
-	private String getMockedInput(String path) {
-		InputStream in = this.getClass().getResourceAsStream(path);
-		return convertStreamToString(in);
+	private String getMockedInput(final String path) {
+		final InputStream in = this.getClass().getResourceAsStream(path);
+		return InfinityParserTest.convertStreamToString(in);
 	}
 
-	private static String convertStreamToString(InputStream is) {
+	private static String convertStreamToString(final InputStream is) {
 		@SuppressWarnings("resource")
-		Scanner s = new Scanner(is).useDelimiter("\\A");
+		final Scanner s = new Scanner(is).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 
 	private class NullOutputStream extends OutputStream {
 		@Override
-		public void write(int b) throws IOException {
+		public void write(final int b) throws IOException {
 		}
 	}
 }

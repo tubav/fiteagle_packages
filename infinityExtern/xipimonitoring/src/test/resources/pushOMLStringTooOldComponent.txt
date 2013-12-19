@@ -1,0 +1,13 @@
+protocol: 4
+domain: FOKUS FUSECO Playground
+start-time: 0
+sender-id: fuseco.fokus.fraunhofer.de
+app-name: fiteagle
+schema: 0 _experiment_metadata subject:string key:string value:string
+schema: 1 testComponent statusMessage:string up:double last_check:string
+schema: 2 anotherTestComponent statusMessage:string up:double last_check:string
+schema: 3 lastTestComponent statusMessage:string up:double last_check:string
+content: text
+0.908463954926	1	0	fine	1	2013-12-12T12:34:34.102734+02:00
+0.908607959747	2	0	executing server update	1	2012-12-12T12:34:34.102734+02:00
+0.908663988113	3	0	up and running	1	2013-12-12T12:34:34.102734+02:00

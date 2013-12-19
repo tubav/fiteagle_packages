@@ -8,58 +8,57 @@ public class TestbedStatus {
 
 	private String id;
 	private String status;
-	private Date lastCheck;
+	private Date lastCheck = new Date();
 	private String statusMessage;
 	private List<TestbedStatus> components;
 
-	public TestbedStatus() {
-
-	}
-
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(final String status) {
 		this.status = status;
 	}
 
 	public Date getLastCheck() {
-		return lastCheck;
+		return new Date(this.lastCheck.getTime());
 	}
 
-	public void setLastCheck(Date lastCheck) {
-		this.lastCheck = lastCheck;
+	public void setLastCheck(final Date lastCheck) {
+		if (null != lastCheck) {
+			this.lastCheck = new Date(lastCheck.getTime());
+		}
 	}
 
 	public List<TestbedStatus> getComponents() {
 		return this.components;
 	}
-	
-	public void setComponents(List<TestbedStatus> components) {
+
+	public void setComponents(final List<TestbedStatus> components) {
 		this.components = components;
 	}
-	
-	public void addComponent(TestbedStatus component){
-		if(this.components == null)
-			components = new ArrayList<TestbedStatus>();
-			
+
+	public void addComponent(final TestbedStatus component) {
+		if (this.components == null) {
+			this.components = new ArrayList<TestbedStatus>();
+		}
+
 		this.components.add(component);
 	}
 
 	public String getStatusMessage() {
-		return statusMessage;
+		return this.statusMessage;
 	}
 
-	public void setStatusMessage(String message) {
+	public void setStatusMessage(final String message) {
 		this.statusMessage = message;
 	}
 }
