@@ -95,8 +95,8 @@
 			<version>2.2.1-b03</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
+
 
 
 	<reporting>
@@ -111,6 +111,63 @@
 
 	<build>
 		<finalName>xipimonitoring</finalName>
+
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4.2</version>
+				</plugin>
+				<plugin>
+					<version>2.5</version>
+					<artifactId>maven-clean-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.1</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				
+				<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.16</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -253,7 +310,6 @@
 							<artifactId>findbugs-maven-plugin</artifactId>
 							<version>${maven.findbugs.plugin}</version>
 						</plugin>
-						-->
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>versions-maven-plugin</artifactId>
