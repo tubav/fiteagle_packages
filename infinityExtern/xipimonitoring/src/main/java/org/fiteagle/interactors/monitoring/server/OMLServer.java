@@ -35,7 +35,6 @@ public class OMLServer implements Runnable {
 			try {
 				(new Thread(new ClientHandler(socket))).start();
 			} catch (final IOException e) {
-				// TODO Auto-generated catch block
 				throw new RuntimeException(e);
 			}
 		}
