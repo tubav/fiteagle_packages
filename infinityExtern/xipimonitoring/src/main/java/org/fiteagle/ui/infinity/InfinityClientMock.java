@@ -61,14 +61,12 @@ public class InfinityClientMock extends InfinityClient {
 
 	@Override
 	public List<InfinityValueID> getTechnicalComponents() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<InfinityArrayList> getComponentDetail(
 			final String infrastructureId, final String componentId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
