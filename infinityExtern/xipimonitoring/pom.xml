@@ -11,7 +11,7 @@
 
 	<properties>
 		<maven.cobertura.plugin>2.6</maven.cobertura.plugin>
-		<maven.doxia.module.markdown.version>1.4</maven.doxia.module.markdown.version>
+		<maven.doxia.module.markdown.version>1.5</maven.doxia.module.markdown.version>
 		<maven.javadoc.plugin>2.9</maven.javadoc.plugin>
 		<maven.jxr.plugin>2.3</maven.jxr.plugin>
 		<maven.pmd.plugin>2.7.1</maven.pmd.plugin>
@@ -31,32 +31,32 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.17.1</version>
+			<version>1.18</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
-			<version>1.17.1</version>
+			<version>1.18</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-servlet</artifactId>
-			<version>1.17.1</version>
+			<version>1.18</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>1.17.1</version>
+			<version>1.18</version>
 		</dependency>
 
 		<!-- the core, which includes Streaming API, shared low-level abstractions 
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.2.0</version>
+			<version>2.3.0</version>
 		</dependency>
 
 		<!-- Just the annotations; use this dependency if you want to attach annotations 
@@ -72,27 +72,27 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.2.0</version>
+			<version>2.3.0</version>
 		</dependency>
 
 		<!-- databinding; ObjectMapper, JsonNode and related classes are here -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.2.0</version>
+			<version>2.3.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
+			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
-			<version>2.0</version>
+			<version>2.2.1-b03</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -124,7 +124,7 @@
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
-				<version>0.7</version>
+				<version>0.9</version>
 				<configuration>
 					<message>Creating site for ${project.version}</message>
 					<server>github</server>
@@ -207,11 +207,6 @@
 								<aggregate>true</aggregate>
 							</configuration>
 						</plugin>
-						<!-- <plugin> -->
-						<!-- <groupId>org.apache.maven.plugins</groupId> -->
-						<!-- <artifactId>maven-checkstyle-plugin</artifactId> -->
-						<!-- <version>${maven.checkstyle.plugin}</version> -->
-						<!-- </plugin> -->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -231,7 +226,6 @@
 							<version>${maven.cobertura.plugin}</version>
 							<configuration>
 								<aggregate>true</aggregate>
-								<!-- <outputDirectory>%{project.reporting.outputDirectory}/cobertura</outputDirectory> -->
 							</configuration>
 						</plugin>
 						<plugin>
@@ -259,6 +253,7 @@
 							<artifactId>findbugs-maven-plugin</artifactId>
 							<version>${maven.findbugs.plugin}</version>
 						</plugin>
+						-->
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>versions-maven-plugin</artifactId>
